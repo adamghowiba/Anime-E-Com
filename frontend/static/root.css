@@ -1,0 +1,22 @@
+:root {
+	--fw-light: 300;
+	--fw-regular: 400;
+	--fw-medium: 500;
+	--fw-semibold: 600;
+	--fw-bold: 700;
+	--fw-extrabold: 800;
+	--fw-black: 900;
+
+	--color-gray-s1: #d2d2d2;
+	--color-blue: #007db5;
+
+	--text-xsm: 12px;
+	--text-sm: 14px;
+	--text-base: 16px;
+	--text-md: 20px;
+	--text-lg: 25px;
+	--text-xl: 31.25px;
+	--text-2xl: 39.06px;
+	--text-3xl: 48.83px;
+	--text-4xl: 61.04px;
+}
