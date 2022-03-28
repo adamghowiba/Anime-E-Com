@@ -20,10 +20,14 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            font-size: 14px;
         }
 
 		h5 {
-			font-size: 1.4rem;
+			font-size: 16px;
+            text-transform: uppercase;
+            color: black;  
+            font-weight: var(--fw-bold);
 		}
 	}
 </style>

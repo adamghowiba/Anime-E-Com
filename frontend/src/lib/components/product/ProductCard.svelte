@@ -1,19 +1,52 @@
 <script lang="ts">
-	export let imgSrc: string;
+	import { alerts } from '$lib/stores/alerts';
+	import { savedItems } from '$lib/stores/cart';
+	import Alert from '../global/Alert.svelte';
+	import QuickviewPopup from '../popup/QuickviewPopup.svelte';
+	import HeartAction from './HeartAction.svelte';
+
+	export let thumbnail: string;
 	export let price: number;
 	export let title: string;
+	export let id: string = 'unset';
+	export let features: string[] = [];
 	export let newItem: boolean = false;
-	export let features: string[] = null;
-	export let sizes: string[] = null;
+	export let saved: boolean = false;
+	// export let sizes: string[] = null;
+
+	let quickviewPopup = false;
+
+	const addSavedProduct = () => {
+		if (!saved) {
+			savedItems.addItem({ price, thumbnail, title, id });
+			alerts.addAlert('Added item to wishlist', 'success');
+			saved = true;
+			return;
+		}
+		
+		savedItems.removeItem(id);
+		alerts.addAlert('Removed item from wishlist', 'success');
+	};
 </script>
+
+{#if quickviewPopup}
+	<QuickviewPopup
+		{features}
+		{price}
+		{title}
+		{thumbnail}
+		on:clickOutside={() => (quickviewPopup = false)}
+	/>
+{/if}
 
 <div class="card">
 	<div class="card__image-wrap">
-		<img class="card__image" src={imgSrc} alt="" />
+		<HeartAction on:click={() => addSavedProduct()} {saved} />
+		<img class="card__image" src={thumbnail} alt="" />
 
 		<div class="actions">
 			<div class="actions__button">Save</div>
-			<div class="actions__button">Quickview</div>
+			<div class="actions__button" on:click={() => (quickviewPopup = true)}>Quickview</div>
 		</div>
 
 		<!-- {#if sizes}
@@ -41,15 +74,9 @@
 	<p class="card__title">
 		{title}
 	</p>
-
-	{#if features}
+	{#if features.length >= 1}
 		<div class="card__features">
-			{#each features as feature, i}
-				<span>{feature}</span>
-				{#if i < features.length - 1}
-					<div class="card__divider" />
-				{/if}
-			{/each}
+			<span>{features.join(' | ')}</span>
 		</div>
 	{/if}
 </div>
@@ -135,12 +162,18 @@
 			opacity: 1;
 		}
 
+		&__heart {
+			position: absolute;
+			top: 12px;
+			right: 12px;
+		}
+
 		&__image-wrap {
 			position: relative;
 			display: block;
 			height: 100%;
 			max-width: 100%;
-			max-height: 500px;
+			max-height: 300px;
 			object-fit: cover;
 		}
 
@@ -156,7 +189,7 @@
 			height: 100%;
 			width: 100%;
 			max-height: 500px;
-			object-fit: cover;
+			object-fit: contain;
 		}
 
 		&__title {

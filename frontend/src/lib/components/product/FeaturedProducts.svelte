@@ -1,13 +1,15 @@
 <script lang="ts">
 	export let title: string;
-	export let subtitle: string;
+	export let subtitle: string = null;
 	export let button: { link: string; name: string };
 </script>
 
 <section class="new-release container container--spaced">
 	<header>
 		<div class="new-release__title">
-			<h5>{subtitle}</h5>
+			{#if subtitle}
+				<h5>{subtitle}</h5>
+			{/if}
 			<h3>{title}</h3>
 		</div>
 

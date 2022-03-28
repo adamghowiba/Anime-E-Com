@@ -1,27 +1,29 @@
 <script lang="ts">
 	import Topbar from './Topbar.svelte';
 	import Icon from '@iconify/svelte';
-	import { overlay } from '$lib/stores/interface';
+	import { navOverlay } from '$lib/stores/interface';
 	import NavDropdown from './NavDropdown.svelte';
 	import { fade } from 'svelte/transition';
 	import DropdownGroup from './DropdownGroup.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	export let minimized: boolean = false;
 
-	const NAV_LINKS = ['shop', 'series', 'accessories'] as const;
-
 	let iconSize = 25;
 	let cartItems = 4;
-
 	let activeNavLink: typeof NAV_LINKS[number];
 	let dropdown = false;
+
+	const NAV_LINKS = ['shop', 'series', 'accessories'] as const;
+
+	const dispatch = createEventDispatcher();
 
 	const linkWrapMouseEnter = (event: MouseEvent) => {};
 
 	const linkWrapMouseLeave = (event: MouseEvent) => {
 		activeNavLink = null;
 		dropdown = false;
-		$overlay = false;
+		$navOverlay = false;
 	};
 
 	const linkMouseEnter = (event: MouseEvent) => {
@@ -29,8 +31,8 @@
 		const id = target.dataset.id as typeof NAV_LINKS[number];
 		activeNavLink = id;
 
-		if ($overlay && dropdown) return;
-		$overlay = true;
+		if ($navOverlay && dropdown) return;
+		$navOverlay = true;
 		dropdown = true;
 	};
 </script>
@@ -100,9 +102,9 @@
 			<a href="/">
 				<Icon icon="carbon:search" width={iconSize} height={iconSize} />
 			</a>
-			<a href="/">
+			<div class="nav__heart-action" on:click={() => dispatch('clickHeart')}>
 				<Icon icon="ant-design:heart-outlined" width={iconSize} height={iconSize} />
-			</a>
+			</div>
 			<a href="/login">
 				<Icon icon="clarity:avatar-line" width={iconSize} height={iconSize} />
 			</a>
@@ -122,6 +124,7 @@
 		z-index: 100;
 		transition: transform 0.25s linear;
 		transform: translateY(0);
+		// opacity: 0.1;
 
 		&.minimized {
 			transform: translateY(-35px);
@@ -156,12 +159,24 @@
 			bottom: -1px;
 			transform: translateY(100%);
 		}
+
+		&__heart-action:hover {
+			cursor: pointer;
+		}
 	}
 
 	.nav__links {
 		justify-content: center;
 		display: flex;
 		font-weight: var(--fw-semibold);
+
+		&__wrap:hover {
+			color: black;
+		}
+
+		&:hover &__wrap:not(.active) {
+			opacity: 0.5;
+		}
 
 		&__item {
 			position: relative;
