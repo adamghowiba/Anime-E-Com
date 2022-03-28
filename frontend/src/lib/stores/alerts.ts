@@ -10,7 +10,7 @@ interface Alert {
 	id: number;
 }
 
-const defaultAlign: AlignLocation = { horizontal: 'right', vertical: 'bottom' };
+const defaultAlign: AlignLocation = { horizontal: 'right', vertical: 'top' };
 
 const createAlerts = () => {
 	const store: Writable<Alert[]> = writable([]);
@@ -31,7 +31,7 @@ const createAlerts = () => {
 				data.shift();
 				return data;
 			});
-		}, 7000);
+		}, 2500);
 	};
 
 	return {

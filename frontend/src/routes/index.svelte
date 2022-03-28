@@ -10,11 +10,9 @@
 	onMount(async () => {
 		// const ScrollTrigger = await import('gsap/ScrollTrigger');
 		// gsap.registerPlugin(ScrollTrigger.ScrollTrigger);
-
 		// gsap.from(['body', 'nav', '.topbar'], {
 		// 	backgroundColor: '#323232',
 		// 	color: 'white',
-			
 		// 	scrollTrigger: {
 		// 		trigger: 'body',
 		// 		start: 'top+=300px',
@@ -27,43 +25,41 @@
 </script>
 
 <Hero
-	title="MINIMAL ANIME STYLE"
-	subtitle="New styles, max comfort"
+	title="Find your impossible"
+	subtitle="You don't have to tell us what's possible.
+
+	We are well aware."
 	button={{ link: '', text: 'shop' }}
-	videoSrc="/videos/anime_video.mp4"
+	imgSrc='/images/atsuko_people.jpg'
 />
 
 <FeaturedProducts title="New releases" subtitle="mens" button={{ link: '/', name: 'View All' }}>
 	<ProductCard
-		imgSrc="/images/products/gym_shark.jpg"
+		thumbnail="/images/products/gym_shark.jpg"
 		price={42}
 		title="Anti-Magic Hoodie"
 		features={['Mineral', 'paige pink']}
-		sizes={['sm', 'md', 'lg', 'xl']}
 		newItem
 	/>
 	<ProductCard
-		imgSrc="/images/products/lone_wolf.jpg"
+		thumbnail="/images/products/lone_wolf.jpg"
 		price={42}
 		title="All Alone Tee"
 		features={['Mineral', 'paige pink']}
-		sizes={['sm', 'md', 'lg', 'xl']}
 		newItem
 	/>
 	<ProductCard
-		imgSrc="/images/products/numa.jpg"
+		thumbnail="/images/products/numa.jpg"
 		price={42}
 		title="Do You Jest Hoodie"
 		features={['Mineral', 'paige pink']}
-		sizes={['sm', 'md', 'lg', 'xl']}
 		newItem
 	/>
 	<ProductCard
-		imgSrc="/images/products/tokyo.jpg"
+		thumbnail="/images/products/tokyo.jpg"
 		price={42}
 		title="Tokyo City Hoodie"
 		features={['Mineral', 'paige pink']}
-		sizes={['sm', 'md', 'lg', 'xl']}
 		newItem
 	/>
 </FeaturedProducts>
@@ -73,47 +69,47 @@
 	<div class="categories__large">
 		<CategoryTile
 			imgSrc="/images/demon_slayer.jpg"
-			links={[{ href: '', name: 'Shop Now' }]}
+			links={[{ href: 'collections/attack-on-titan', name: 'Shop Now' }]}
 			title="Attack On Titan"
 			center
 		/>
 	</div>
 	<CategoryTile
 		imgSrc="/images/attack_titan.jpg"
-		links={[{ href: '', name: 'Shop Now' }]}
+		links={[{ href: 'collections/attack-on-titan', name: 'Shop Now' }]}
 		title="Demon Slayer"
 	/>
 	<CategoryTile
 		imgSrc="/images/mossholder.jpg"
-		links={[{ href: '', name: 'Shop Now' }]}
+		links={[{ href: 'collections/attack-on-titan', name: 'Shop Now' }]}
 		title="Moss Holder"
 	/>
 </div>
 
-<FeaturedProducts title="New releases" subtitle="mens" button={{ link: '/', name: 'View All' }}>
+<FeaturedProducts title="BEST OF ANIME"  button={{ link: '/', name: 'View All' }}>
 	<ProductCard
-		imgSrc="/images/products/gym_shark.jpg"
+		thumbnail="/images/products/gym_shark.jpg"
 		price={42}
 		title="Anti-Magic Hoodie"
 		features={['Mineral', 'paige pink']}
 		newItem
 	/>
 	<ProductCard
-		imgSrc="/images/products/lone_wolf.jpg"
+		thumbnail="/images/products/lone_wolf.jpg"
 		price={42}
 		title="All Alone Tee"
 		features={['Mineral', 'paige pink']}
 		newItem
 	/>
 	<ProductCard
-		imgSrc="/images/products/numa.jpg"
+		thumbnail="/images/products/numa.jpg"
 		price={42}
 		title="Do You Jest Hoodie"
 		features={['Mineral', 'paige pink']}
 		newItem
 	/>
 	<ProductCard
-		imgSrc="/images/products/tokyo.jpg"
+		thumbnail="/images/products/tokyo.jpg"
 		price={42}
 		title="Tokyo City Hoodie"
 		features={['Mineral', 'paige pink']}
@@ -121,23 +117,27 @@
 	/>
 </FeaturedProducts>
 
-<Hero
-	title="MINIMAL ANIME STYLE"
-	subtitle="New styles, max comfort"
-	button={{ link: '', text: 'shop' }}
-	imgSrc="/images/demon_slayer.jpg"
-	contentAlign="btm-center"
-	height={60}
-/>
+<section class="hero-section">
+	<Hero
+		title="MINIMAL ANIME STYLE"
+		subtitle="New styles, max comfort"
+		button={{ link: '', text: 'shop' }}
+		imgSrc="/images/demon_slayer.jpg"
+		contentAlign="btm-center"
+		height={60}
+	/>
+</section>
 
-<Hero
-	title="MINIMAL ANIME STYLE"
-	subtitle="New styles, max comfort"
-	button={{ link: '', text: 'shop' }}
-	imgSrc="/images/attack_titan.jpg"
-	contentAlign="btm-center"
-	height={60}
-/>
+<section class="hero-section">
+	<Hero
+		title="MINIMAL ANIME STYLE"
+		subtitle="New styles, max comfort"
+		button={{ link: '', text: 'shop' }}
+		imgSrc="/images/attack_titan.jpg"
+		contentAlign="btm-center"
+		height={60}
+	/>
+</section>
 
 <!-- <div class="filler"></div> -->
 <style lang="scss">
@@ -150,6 +150,9 @@
 		&__large {
 			grid-row: 1/-1;
 		}
+	}
+	.hero-section {
+		margin-top: 3rem;
 	}
 	.filler {
 		margin-bottom: 10rem;

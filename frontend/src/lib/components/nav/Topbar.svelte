@@ -25,8 +25,11 @@
 		width: 100%;
 		height: 35px;
 		font-size: 14px;
-		background-color: #ebebeb;
+		// background-color: #ebebeb;
+		background-color: #0D0D0D;
+		color: white;
 		z-index: 1000;
+
 
 		&__items {
 			display: flex;

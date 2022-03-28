@@ -30,7 +30,7 @@
 <style lang="scss">
 	.hero {
 		position: relative;
-		margin: 2rem 0;
+		// margin: 2rem 0;
 
 		img,
 		video {
@@ -42,6 +42,7 @@
 
 		&__content {
 			padding: 0 3rem;
+			max-width: 40ch;
 			position: absolute;
 		}
 
