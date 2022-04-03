@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { browser } from '$app/env';
-
 	import Alert from '$lib/components/global/Alert.svelte';
+	import Drawers from '$lib/components/global/Drawers.svelte';
 	import Footer from '$lib/components/global/Footer.svelte';
 	import Navbar from '$lib/components/nav/Navbar.svelte';
-	import SavedDrawer from '$lib/components/saved/SavedDrawer.svelte';
-	import { alertLocation, alerts } from '$lib/stores/alerts';
-	import { navOverlay, overlay } from '$lib/stores/interface';
+	import { alertLocation,alerts } from '$lib/stores/alerts';
+	import { navOverlay,overlay, navbarMinimzed as navMinimzedStore } from '$lib/stores/interface';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
@@ -14,8 +13,8 @@
 	let lastScrollY = 0;
 	let sectionWrapper: HTMLElement;
 
-	let drawers = {
-		saved: false,
+	const drawers = {
+		wishlist: false,
 		cart: false
 	};
 
@@ -23,16 +22,18 @@
 	const handleMouseScroll = (event: MouseEvent) => {
 		if (lastScrollY < window.scrollY) {
 			navbarMinimzed = true;
+			$navMinimzedStore = true;
 		} else {
 			navbarMinimzed = false;
+			$navMinimzedStore = false;
 		}
 
 		lastScrollY = window.scrollY;
 	};
 
-	const setDrawerOpen = (opened: boolean) => {
+	const setDrawerExapnded = (opened: boolean, type: keyof typeof drawers) => {
 		sectionWrapper.style.transform = opened ? 'translateX(-430px)' : 'none';
-		drawers.saved = opened;
+		drawers[type] = opened;
 	};
 
 	onMount(() => {
@@ -49,27 +50,31 @@
 		}
 	}
 
-	// $: document.body.style.overflow = `${$overlay || $navOverlay ? 'hidden' : 'auto'}`;
-
-	$: $overlay = drawers.cart || drawers.saved;
+	$: $overlay = drawers.cart || drawers.wishlist;
 </script>
 
 {#if $overlay || $navOverlay}
 	<div class="overlay" transition:fade={{ duration: 150 }} class:navbarShown={$navOverlay} />
 {/if}
 
+<!-- Main Section -->
 <section bind:this={sectionWrapper}>
-	<Navbar minimized={navbarMinimzed} on:clickHeart={() => setDrawerOpen(true)} />
+	<Navbar
+		minimized={navbarMinimzed}
+		on:clickHeart={() => setDrawerExapnded(true, 'wishlist')}
+		on:clickCart={() => setDrawerExapnded(true, 'cart')}
+	/>
 	<slot />
 	<Footer />
 </section>
 
-<!-- Cart Drawer -->
-
-<!-- Saved Drawer -->
-{#if drawers.saved}
-	<SavedDrawer on:click={() => setDrawerOpen(false)} />
-{/if}
+<!-- Wishlist & Cart Drawers -->
+<Drawers
+	cartExpanded={drawers.cart}
+	wishlistExpanded={drawers.wishlist}
+	on:wishlistClosed={() => setDrawerExapnded(false, 'wishlist')}
+	on:cartClosed={() => setDrawerExapnded(false, 'cart')}
+/>
 
 <!-- Popup Alerts -->
 {#if $alerts.length >= 1}

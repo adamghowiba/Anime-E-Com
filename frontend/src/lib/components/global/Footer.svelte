@@ -15,19 +15,19 @@
 		<div class="details__contact-block">
 			<div class="details__contact-item">
 				<div class="details__contact-icon">
-					<Icon icon="eva:pin-fill" color="white" width={iconSize} height={iconSize} />
+					<Icon icon="eva:pin-fill" color="black" width={iconSize} height={iconSize} />
 				</div>
 				<span>44 Elmessaha Street Dokki, Giza</span>
 			</div>
 			<div class="details__contact-item">
 				<div class="details__contact-icon">
-					<Icon icon="carbon:phone-filled" color="white" width={iconSize} height={iconSize} />
+					<Icon icon="carbon:phone-filled" color="black" width={iconSize} height={iconSize} />
 				</div>
 				<span>(202) 37 497 155</span>
 			</div>
 			<div class="details__contact-item">
 				<div class="details__contact-icon">
-					<Icon icon="ic:baseline-email" color="white" width={iconSize} height={iconSize} />
+					<Icon icon="ic:baseline-email" color="black" width={iconSize} height={iconSize} />
 				</div>
 				<span>ahmad@fayroozfarm.com</span>
 			</div>
@@ -68,6 +68,9 @@
 </footer>
 
 <style lang="scss">
+	a, span, p {
+		font-size: 14px;
+	}
 	.footer {
 		display: grid;
         border-top: 1px solid #E7E7E7;
@@ -86,7 +89,7 @@
 		&__block {
 			display: flex;
 			flex-direction: column;
-			gap: 1.5rem;
+			gap: 1rem;
 		}
 
 		&__block h5 {
@@ -122,6 +125,7 @@
 	.details {
 		display: flex;
 		flex-direction: column;
+		margin-right: auto;
 		// gap: 1rem;
 
 		h4 {
@@ -147,9 +151,6 @@
 		}
 
 		&__contact-icon {
-			width:  35px;
-			height: 35px;
-			background-color: rgb(43, 43, 43);
 			border-radius: 50%;
 			display: flex;
 			justify-content: center;

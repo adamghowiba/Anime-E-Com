@@ -24,11 +24,11 @@ import SquareButton from '../global/SquareButton.svelte';
 
 <style lang="scss">
 	.block {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		color: var(--color);
 		gap: 10px;
-		z-index: 1;
 
 		h2 {
 			font-weight: var(--fw-black);
@@ -41,6 +41,7 @@ import SquareButton from '../global/SquareButton.svelte';
 		p {
 			font-weight: var(--fw-light);
 			margin-bottom: 20px;
+			line-height: 1.3;
 		}
 
 		&.center, &.btm-center {

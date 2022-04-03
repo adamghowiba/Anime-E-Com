@@ -28,6 +28,7 @@
 		color: #6e6e6e;
 		text-transform: uppercase;
 		font-size: 11px;
+		width: 100%;
 		font-weight: var(--fw-bold);
 		display: flex;
 		flex-direction: column;

@@ -6,11 +6,11 @@
 	import { fade } from 'svelte/transition';
 	import DropdownGroup from './DropdownGroup.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { cartItems } from '$lib/stores/cart';
 
 	export let minimized: boolean = false;
 
 	let iconSize = 25;
-	let cartItems = 4;
 	let activeNavLink: typeof NAV_LINKS[number];
 	let dropdown = false;
 
@@ -40,7 +40,7 @@
 <div class="nav__wrapper" class:minimized>
 	<Topbar />
 	<nav class="nav">
-		<a href="/">
+		<a href="/" class="nav__logo-wrap">
 			<img class="nav__logo" src="/images/logo.png" alt="Logo" />
 		</a>
 
@@ -108,8 +108,10 @@
 			<a href="/login">
 				<Icon icon="clarity:avatar-line" width={iconSize} height={iconSize} />
 			</a>
-			<div class="nav__cart">
-				<div class="nav__cart__total" class:large={cartItems >= 100}>{cartItems}</div>
+			<div class="nav__cart" on:click={() => dispatch('clickCart')}>
+				<div class="nav__cart__total" class:large={$cartItems.length >= 100}>
+					{$cartItems?.length || 0}
+				</div>
 				<Icon icon="ant-design:shopping-outlined" width={iconSize} height={iconSize} />
 			</div>
 		</div>
@@ -145,6 +147,10 @@
 
 		&__logo {
 			max-width: 100px;
+		}
+
+		&__logo-wrap {
+			width: max-content;
 		}
 
 		&__actions {

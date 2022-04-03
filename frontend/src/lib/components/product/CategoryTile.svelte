@@ -23,6 +23,7 @@
 	.tile {
 		position: relative;
 		height: 100%;
+		width: 100%;
 
 		img {
 			display: block;
@@ -32,15 +33,15 @@
 		}
 
 		&__content {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
 			position: absolute;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            text-align: center;
+			bottom: 1rem;
+			left: 50%;
+			transform: translateX(-50%);
+			color: white;
+			text-align: center;
 		}
 
 		&__content.center {
@@ -49,13 +50,13 @@
 			transform: translate(-50%, -50%);
 		}
 
-        h4 {
-            font-weight: var(--fw-semibold);
+		h4 {
+			font-weight: var(--fw-semibold);
 			color: white;
-        }
+		}
 
-        a {
-            text-decoration: underline;
-        }
+		a {
+			text-decoration: underline;
+		}
 	}
 </style>

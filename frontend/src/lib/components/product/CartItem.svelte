@@ -1,15 +1,37 @@
 <script lang="ts">
-import { savedItems } from "$lib/stores/cart";
+	import { cartItems } from '$lib/stores/cart';
+	import { savedItems } from '$lib/stores/wishlist';
+	import { generateProductId } from '$lib/utils/numberUtils';
+	import Alert from '../global/Alert.svelte';
+	import QuanityTicker from '../global/QuanityTicker.svelte';
 
-
-	type ItemType = 'cart' | 'saved';
+	type ItemType = 'cart' | 'wishlist';
 
 	export let thumbnail: string;
 	export let title: string;
 	export let price: number;
 	export let itemType: ItemType;
-	export let variants: { [key: string]: string } = {};
-	export let id: string;
+	export let variants: { [key: string]: unknown } = {};
+	export let id: number;
+	export let productId: string;
+	export let quantity: number;
+
+	function handleAddToCart() {
+		savedItems.removeItem(id);
+
+		cartItems.addItem({ id: generateProductId(), productId, price, title, thumbnail, quanity: 1 });
+	}
+
+	function removeQuantity() {
+		if (quantity == 0) return;
+		cartItems.updateItem(id, { quanity: --quantity });
+	}
+
+	function addQuantity() {
+		cartItems.updateItem(id, { quanity: ++quantity });
+	}
+
+	$: items = itemType == 'cart' ? cartItems : savedItems;
 </script>
 
 <div class="item">
@@ -24,13 +46,18 @@ import { savedItems } from "$lib/stores/cart";
 					<span>{key}: {value}</span>
 				{/each}
 			{/if}
-			<span>${price}</span>
+			<span class="item__price">${price}</span>
 		</div>
 
 		<div class="item__actions">
-			<button on:click={() => savedItems.removeItem(id)}>Remove</button>
-			<span>|</span>
-			<button>Add To Cart</button>
+			{#if itemType == 'wishlist'}
+				<button on:click={() => items.removeItem(id)}>Remove</button>
+				<span>|</span>
+				<button on:click={handleAddToCart}>Add To Cart</button>
+			{:else}
+				<QuanityTicker {quantity} on:add={addQuantity} on:remove={removeQuantity} />
+				<button on:click={() => items.removeItem(id)}>Remove</button>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -46,27 +73,37 @@ import { savedItems } from "$lib/stores/cart";
 
 		h5 {
 			font-size: var(--text-base);
+			text-transform: capitalize;
+		}
+
+		span {
+			display: block;
+			// font-size: var(--text-sm);
+			text-transform: capitalize;
 		}
 
 		&__image {
 			width: 90px;
 			// height: 125px;
 			height: 100%;
-			object-fit: cover;
+			object-fit: contain;
 		}
 
 		&__info {
 			display: flex;
 			flex-direction: column;
-			gap: 7px;
 		}
 
 		&__variants {
 			display: flex;
 			flex-direction: column;
-			gap: 7px;
-			font-size: var(--text-sm);
+			font-size: 12px;
 			margin-bottom: 4px;
+		}
+
+		&__info,
+		&__variants {
+			gap: 10px;
 		}
 
 		&__actions {
@@ -85,12 +122,6 @@ import { savedItems } from "$lib/stores/cart";
 			&:hover {
 				cursor: pointer;
 			}
-		}
-
-		span {
-			display: block;
-			font-size: var(--text-sm);
-			text-transform: capitalize;
 		}
 	}
 </style>

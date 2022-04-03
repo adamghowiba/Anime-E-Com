@@ -1,6 +1,6 @@
 <script lang="ts">
 	const LINKS = [
-		{ name: 'My account', href: '' },
+		{ name: 'My account', href: '/account' },
 		{ name: 'Blog', href: '' },
 		{ name: 'Newsletter', href: '' },
 		{ name: 'Help', href: '' }
@@ -39,6 +39,11 @@
 		&__item {
 			padding: 10px;
 			position: relative;
+			transition: opacity 0.15s ease-out;
+		}
+
+		&__item:hover {
+			opacity: 0.8;
 		}
 
         a {
