@@ -10,7 +10,7 @@ export interface Product {
 	title: string;
 	price: number;
 	productId: string;
-	id: number;
+	id: string;
 	variants?: { [key: string]: unknown };
 }
 

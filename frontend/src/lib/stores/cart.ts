@@ -32,13 +32,13 @@ const createCartStore = () => {
 		});
 	};
 
-	const removeItem = (id: number) => {
+	const removeItem = (id: string) => {
 		update((data) => {
 			return data.filter((items) => items.id !== id);
 		});
 	};
 
-	const updateItem = (id: number, data: Partial<CartProduct>) => {
+	const updateItem = (id: string, data: Partial<CartProduct>) => {
 		update((items) => {
 			const itemIndex = items.findIndex((item) => item.id === id);
 			if (itemIndex >= 0) items[itemIndex] = { ...items[itemIndex], ...data };

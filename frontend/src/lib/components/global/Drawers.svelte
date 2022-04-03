@@ -24,7 +24,6 @@
 				price={item.price}
 				thumbnail={item.thumbnail}
 				title={item.title}
-				id={item.id}
 				productId={item.productId}
 				quantity={1}
 			/>

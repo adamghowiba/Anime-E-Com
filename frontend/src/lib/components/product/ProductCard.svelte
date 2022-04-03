@@ -9,7 +9,7 @@
 	export let thumbnail: string = '/images/no_image.png';
 	export let price: number;
 	export let title: string;
-	export let id: number = 1;
+	// export let id: number = 1;
 	export let productId: string = 'unset';
 	export let features: string[] = [];
 	export let newItem: boolean = false;
@@ -26,7 +26,7 @@
 			return;
 		}
 
-		savedItems.removeItem(id);
+		savedItems.removeItem(productId);
 		alerts.addAlert('Removed item from wishlist', 'success');
 	};
 </script>

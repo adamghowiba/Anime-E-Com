@@ -12,14 +12,21 @@
 	export let price: number;
 	export let itemType: ItemType;
 	export let variants: { [key: string]: unknown } = {};
-	export let id: number;
+	export let id: string = null;
 	export let productId: string;
 	export let quantity: number;
 
 	function handleAddToCart() {
 		savedItems.removeItem(id);
 
-		cartItems.addItem({ id: generateProductId(), productId, price, title, thumbnail, quanity: 1 });
+		cartItems.addItem({
+			id: generateProductId(productId, variants),
+			productId,
+			price,
+			title,
+			thumbnail,
+			quanity: 1
+		});
 	}
 
 	function removeQuantity() {
@@ -51,7 +58,7 @@
 
 		<div class="item__actions">
 			{#if itemType == 'wishlist'}
-				<button on:click={() => items.removeItem(id)}>Remove</button>
+				<button on:click={() => items.removeItem(productId)}>Remove</button>
 				<span>|</span>
 				<button on:click={handleAddToCart}>Add To Cart</button>
 			{:else}

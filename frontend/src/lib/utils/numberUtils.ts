@@ -1,3 +1,5 @@
-export const generateProductId = () => {
-	return Math.floor(Math.random() * 1000) + 1;
+import type { Product } from "$lib/types/interface";
+
+export const generateProductId = (productId: string, variants: {[key: string]: unknown}) => {
+	return `${productId}--${Object.values(variants).join('_')}`
 };

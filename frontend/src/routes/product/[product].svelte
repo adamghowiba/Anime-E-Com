@@ -14,7 +14,7 @@
 	import { alerts } from '$lib/stores/alerts';
 	import { cartItems } from '$lib/stores/cart';
 	import { navbarMinimzed } from '$lib/stores/interface';
-import { generateProductId } from '$lib/utils/numberUtils';
+	import { generateProductId } from '$lib/utils/numberUtils';
 	import { unslugify } from '$lib/utils/stringUtils';
 	import type { Product } from '@chec/commerce.js/types/product';
 	import Icon from '@iconify/svelte';
@@ -62,7 +62,7 @@ import { generateProductId } from '$lib/utils/numberUtils';
 		if (selectedSize) itemVariants['size'] = selectedSize;
 
 		cartItems.addItem({
-			id: generateProductId(),
+			id: generateProductId(productData.id, itemVariants),
 			productId: productData.id,
 			price: productData.price.raw,
 			quanity: 1,
