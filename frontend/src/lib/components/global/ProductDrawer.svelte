@@ -6,6 +6,7 @@
 	import { fly, fade } from 'svelte/transition';
 	import { savedItems } from '$lib/stores/wishlist';
 	import Button from '../global/Button.svelte';
+import SquareButton from './SquareButton.svelte';
 
 	export let drawerType: 'cart' | 'saved';
 	export let itemCount: number;
@@ -65,6 +66,8 @@
 			<slot />
 		{/if}
 	</div>
+
+	<SquareButton buttonColor='black' width="100%" href="/cart"> View Cart </SquareButton>
 </div>
 
 <style lang="scss">

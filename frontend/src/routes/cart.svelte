@@ -4,7 +4,7 @@
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import CheckoutItem from '$lib/components/product/CheckoutItem.svelte';
 	import { cartItems } from '$lib/stores/cart';
-import { navbarMinimzed } from '$lib/stores/interface';
+	import { navbarMinimzed } from '$lib/stores/interface';
 	import type { LineItem } from '@chec/commerce.js/types/line-item';
 
 	let cartContents: LineItem[];
@@ -25,68 +25,86 @@ import { navbarMinimzed } from '$lib/stores/interface';
 
 		cartContents = cart;
 	}
-	let items = ['', ''];
-	// getCartContents();
+	getCartContents();
 </script>
 
 <section class="cart container container--lg">
-	<header>
-		<h2>YOUR BAG</h2>
+	{#if cartContents}
+		<header>
+			<h2>YOUR BAG</h2>
 
-		<h5>TOTAL ({items.length} item{items.length > 1 ? 's' : ''})</h5>
-		<a href="/">Continue Shopping</a>
-	</header>
+			<h5>TOTAL ({cartContents.length} item{cartContents.length > 1 ? 's' : ''})</h5>
+			<a href="/">Continue Shopping</a>
+		</header>
 
-	<div class="cart__grid">
-		<div class="cart__items">
-			{#each $cartItems as item}
-				<CheckoutItem
-					thumbnail={item.thumbnail}
-					price={item.price}
-					quantity={item.quanity}
-					title={item.title}
-					id={item.id}
-					variants={item.variants}
-					productId={item.productId}
-					imgSize="215px"
-				/>
-			{/each}
-		</div>
+		<div class="cart__grid">
+			<div class="cart__items">
+				{#each cartContents as item}
+					<CheckoutItem
+						thumbnail={item.image.url}
+						price={item.price.raw}
+						quantity={item.quantity}
+						title={item.name}
+						id={item.id}
+						variants={item.variant.options}
+						productId={item.product_id}
+						imgSize="215px"
+					/>
+				{/each}
 
-		<div class="order" class:isNavExpanded={!$navbarMinimzed}>
-			<div class="order__block order__block--promo">
-				<TextInput label="Enter Promo Code" name="" bind:value={promoValue} size="large" />
-				<SquareButton buttonColor="black" justify="space-between" width="100%" outlined>
-					Submit
-				</SquareButton>
+				<hr style="width: 100%;" />
+
+				{#each $cartItems as item}
+					<CheckoutItem
+						thumbnail={item.thumbnail}
+						price={item.price}
+						quantity={item.quanity}
+						title={item.title}
+						id={item.id}
+						selectedVariant={item.selectedVariant}
+						productId={item.productId}
+						imgSize="215px"
+					/>
+				{/each}
 			</div>
 
-			<div class="order__block order__block--total">
-				<div class="order__summary">
-					<h4>ORDER Summary</h4>
-					<h6>TOTAL <span>$2,420.00</span></h6>
+			<div class="order" class:isNavExpanded={!$navbarMinimzed}>
+				<div class="order__block order__block--promo">
+					<TextInput label="Enter Promo Code" name="" bind:value={promoValue} size="large" />
+					<SquareButton buttonColor="black" justify="space-between" width="100%" outlined>
+						Submit
+					</SquareButton>
 				</div>
-				<SquareButton buttonColor="black" justify="space-between" width="100%" outlined>
-					Check out
-				</SquareButton>
+
+				<div class="order__block order__block--total">
+					<div class="order__summary">
+						<h4>ORDER Summary</h4>
+						<h6>TOTAL <span>$2,420.00</span></h6>
+					</div>
+					<SquareButton buttonColor="black" justify="space-between" width="100%" outlined>
+						Check out
+					</SquareButton>
+				</div>
 			</div>
 		</div>
-	</div>
+	{:else}
+		<h4>Loading...</h4>
+	{/if}
 </section>
 
 <style lang="scss">
 	.order {
-        top: 5.5rem;
-        height: max-content;
-        position: sticky;
+		top: 5.5rem;
+		height: max-content;
+		position: sticky;
 		display: flex;
 		flex-direction: column;
 		gap: 3rem;
-        transition: top 0.25s ease-out;
+		transition: top 0.25s ease-out;
 
-        &.isNavExpanded {
-            top: calc(5.5rem + 35px);
-        }
+		&.isNavExpanded {
+			top: calc(5.5rem + 35px);
+		}
 
 		&__block {
 			display: flex;

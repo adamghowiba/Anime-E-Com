@@ -21,8 +21,6 @@
 		savedItems.removeItem(productId);
 
 		cartItems.addItem({
-			id: 'awdawd1',
-			// id: generateProductId(productId, variants),
 			productId,
 			price,
 			title,
@@ -33,11 +31,11 @@
 
 	function removeQuantity() {
 		if (quantity == 0) return;
-		cartItems.updateItem(id, { quanity: --quantity });
+		cartItems.updateQuantity(id, --quantity);
 	}
 
 	function addQuantity() {
-		cartItems.updateItem(id, { quanity: ++quantity });
+		cartItems.updateQuantity(id, ++quantity);
 	}
 
 	console.log(variants);

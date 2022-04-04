@@ -1,5 +1,7 @@
 // Import the Commerce module
-import type { VariantGroup } from '$lib/types/interface';
+import { cartItems } from '$lib/stores/cart';
+import type { CartProduct, VariantGroup } from '$lib/types/interface';
+import { generateProductId } from '$lib/utils/numberUtils';
 import Commerce from '@chec/commerce.js';
 import type { Asset } from '@chec/commerce.js/types/asset';
 import type { Product } from '@chec/commerce.js/types/product';
@@ -53,4 +55,16 @@ export const isValidProduct = (product: Product): boolean => {
 	if (product.assets.length == 0) return false;
 
 	return true;
+};
+
+export const addProductToCart = async (product: Omit<CartProduct, 'id'>) => {
+	const parsedVariants = product.selectedVariant.reduce((acc, curr) => {
+		acc[curr.groupId] = curr.optionId;
+		return acc;
+	}, {} as { [key: string]: string });
+
+	const addedItem = await commerce.cart.add(product.productId, 1, parsedVariants)
+	console.log(addedItem);
+
+	return addedItem;
 };

@@ -1,5 +1,5 @@
-import type { Product } from "$lib/types/interface";
+import type { Product, SelectedVariant } from '$lib/types/interface';
 
-export const generateProductId = (productId: string, variants: {[key: string]: unknown}) => {
-	return `${productId}--${Object.values(variants).join('_')}`
+export const generateProductId = (productId: string, variants: SelectedVariant[]) => {
+	return `${productId}--${variants.reduce((acc, curr) => (acc = [...acc, curr.optionName]), [])}`;
 };

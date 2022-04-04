@@ -2,7 +2,7 @@ import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { browser } from '$app/env';
 import type { Product, CartProduct } from '$lib/types/interface';
-import { commerce } from '$lib/commerce/commerce';
+import { addProductToCart, commerce } from '$lib/commerce/commerce';
 
 const localSavedItems = browser ? JSON.parse(localStorage?.getItem('cart-items'))?.items : [];
 
@@ -14,8 +14,11 @@ const createCartStore = () => {
 		localStorage.setItem('cart-items', JSON.stringify({ items: item }));
 	});
 
-	const addItem = (product: CartProduct) => {
-		const itemExsists = get(cartItems).find((item) => item.id === product.id);
+	const addItem = async (product: Omit<CartProduct, 'id'>) => {
+		/* Add product to cart with variants */
+		const { line_item_id } = await addProductToCart(product);
+
+		const itemExsists = get(cartItems).find((item) => item.id === line_item_id);
 		const sameVariants =
 			JSON.stringify(itemExsists?.variants) === JSON.stringify(product?.variants);
 
@@ -24,27 +27,32 @@ const createCartStore = () => {
 			return;
 		}
 
-		/* Add product to cart with variants */
-		// commerce.cart.add(
-		// 	product.productId,
-		// 	1,
-		// 	product.selectedVariant.reduce((acc, curr) => {
-		// 		acc[curr.groupId] = curr.optionId;
-		// 		return acc;
-		// 	}, {} as { [key: string]: string })
-		// );
 		update((data) => {
-			return [...data, { id: Math.floor(Math.random() * 1000), ...product }];
+			return [...data, { id: line_item_id, ...product }];
 		});
 	};
 
-	const removeItem = (id: string) => {
+	const removeItem = async (id: string) => {
+		const itemRemoved = await commerce.cart.remove(id);
+		console.log(itemRemoved);
+
 		update((data) => {
 			return data.filter((items) => items.id !== id);
 		});
 	};
 
-	const updateItem = (id: string, data: Partial<CartProduct>) => {
+	const updateQuantity = async (id: string, quantity) => {
+		const updatedItem = await commerce.cart.update(id, { quantity });
+		console.log(updatedItem);
+		
+		update((items) => {
+			const itemIndex = items.findIndex((item) => item.id === id);
+			if (itemIndex >= 0) items[itemIndex].quanity = quantity;
+			return items;
+		});
+	};
+
+	const updateItem = async (id: string, data: Partial<CartProduct>) => {
 		update((items) => {
 			const itemIndex = items.findIndex((item) => item.id === id);
 			if (itemIndex >= 0) items[itemIndex] = { ...items[itemIndex], ...data };
@@ -57,6 +65,7 @@ const createCartStore = () => {
 		removeItem,
 		subscribe,
 		updateItem,
+		updateQuantity,
 		set,
 		update
 	};

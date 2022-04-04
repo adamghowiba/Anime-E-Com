@@ -5,21 +5,6 @@
 		parseProductColors,
 		parseProductSizes
 	} from '$lib/commerce/commerce';
-	import ToggleList from '$lib/components/account/ToggleList.svelte';
-	import Breadcrumbs from '$lib/components/global/Breadcrumbs.svelte';
-	import SquareButton from '$lib/components/global/SquareButton.svelte';
-	import RadioGroup from '$lib/components/inputs/RadioGroup.svelte';
-	import RadioInput from '$lib/components/inputs/RadioInput.svelte';
-	import ProductSlider from '$lib/components/product/ProductSlider.svelte';
-	import { alerts } from '$lib/stores/alerts';
-	import { cartItems } from '$lib/stores/cart';
-	import { navbarMinimzed } from '$lib/stores/interface';
-	import { savedItems } from '$lib/stores/wishlist';
-	import type { SelectedVariant, VariantGroup, VariantOption } from '$lib/types/interface';
-	import { generateProductId } from '$lib/utils/numberUtils';
-	import { unslugify } from '$lib/utils/stringUtils';
-	import type { Product } from '@chec/commerce.js/types/product';
-	import Icon from '@iconify/svelte';
 	import type { Load } from '@sveltejs/kit';
 
 	export const load: Load = async ({ props, params, url }) => {
@@ -45,6 +30,21 @@
 </script>
 
 <script lang="ts">
+	import ToggleList from '$lib/components/account/ToggleList.svelte';
+	import Breadcrumbs from '$lib/components/global/Breadcrumbs.svelte';
+	import SquareButton from '$lib/components/global/SquareButton.svelte';
+	import RadioGroup from '$lib/components/inputs/RadioGroup.svelte';
+	import RadioInput from '$lib/components/inputs/RadioInput.svelte';
+	import ProductSlider from '$lib/components/product/ProductSlider.svelte';
+	import { alerts } from '$lib/stores/alerts';
+	import { cartItems } from '$lib/stores/cart';
+	import { navbarMinimzed } from '$lib/stores/interface';
+	import { savedItems } from '$lib/stores/wishlist';
+	import type { SelectedVariant, VariantGroup, VariantOption } from '$lib/types/interface';
+	import { generateProductId } from '$lib/utils/numberUtils';
+	import { unslugify } from '$lib/utils/stringUtils';
+	import type { Product } from '@chec/commerce.js/types/product';
+	import Icon from '@iconify/svelte';
 	export let productSlug: string;
 	export let productId: number;
 	export let productData: Product;
@@ -53,16 +53,17 @@
 	// let sizeOptions = null;
 	// let colorOptions = null;
 
-	let sizeOptions = parseProductSizes(productData);
-	let colorOptions = parseProductColors(productData);
+	let sizeOptions: VariantGroup = parseProductSizes(productData);
+	let colorOptions: VariantGroup = parseProductColors(productData);
 
-	let productTitle = unslugify(productSlug);
-	let selectedColor = colorOptions ? colorOptions.options[0] : null;
+	let productTitle: string = unslugify(productSlug);
+	let selectedColor: VariantOption = colorOptions ? colorOptions.options[0] : null;
 	let selectedSize: VariantOption;
 
 	function addToCart() {
 		const selectedVariant: SelectedVariant[] = [];
-
+	
+		/* TODO How can this be better */
 		if (selectedColor)
 			selectedVariant.push({
 				groupId: colorOptions.id,
@@ -80,8 +81,6 @@
 			});
 
 		cartItems.addItem({
-			// id: generateProductId(productData.id, itemVariants),
-			id: 'adwawd',
 			productId: productData.id,
 			price: productData.price.raw,
 			quanity: 1,

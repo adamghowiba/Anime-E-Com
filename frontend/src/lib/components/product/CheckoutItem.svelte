@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { commerce } from '$lib/commerce/commerce';
+
 	import { cartItems } from '$lib/stores/cart';
 	import { savedItems } from '$lib/stores/wishlist';
+	import type { SelectedVariant } from '$lib/types/interface';
 	import { generateProductId } from '$lib/utils/numberUtils';
+	import { onMount } from 'svelte';
 	import Alert from '../global/Alert.svelte';
 	import QuanityTicker from '../global/QuanityTicker.svelte';
 
@@ -10,6 +14,7 @@
 	export let title: string;
 	export let price: number;
 	export let variants: { [key: string]: unknown } = {};
+	export let selectedVariant: SelectedVariant[] = null;
 	export let id: string = null;
 	export let productId: string;
 	export let quantity: number;
@@ -17,18 +22,23 @@
 	/* Style Props */
 	export let imgSize: string = '120px';
 
-	function handleAddToCart() {
+	async function handleAddToCart() {
 		savedItems.removeItem(productId);
 
-		cartItems.addItem({
-			id: generateProductId(productId, variants),
-			productId,
-			price,
-			title,
-			thumbnail,
-			quanity: 1
-		});
+		// cartItems.addItem({
+		// 	id: generateProductId(productId, variants),
+		// 	productId,
+		// 	price,
+		// 	title,
+		// 	thumbnail,
+		// 	quanity: 1
+		// });
 	}
+
+	onMount(async () => {
+		const product = await commerce.products.retrieve(productId, {});
+		console.log(product);
+	});
 
 	function removeQuantity() {
 		if (quantity == 0) return;
@@ -52,9 +62,16 @@
 		</div>
 
 		<div class="info__variants">
-			{#each Object.entries(variants) as [key, value]}
-				<span>{key}: {value}</span>
-			{/each}
+			{#if selectedVariant}
+				{#each selectedVariant as variant}
+					<span>{variant.groupName}: {variant.optionName}</span>
+				{/each}
+			{:else}
+				{#each Object.entries(variants) as [key, value]}
+					<span>{key}: {value}</span>
+				{/each}
+			{/if}
+			<span>QTY: {quantity}</span>
 		</div>
 
 		<div class="info__actions">
