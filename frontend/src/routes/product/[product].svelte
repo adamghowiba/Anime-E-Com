@@ -14,6 +14,8 @@
 	import { alerts } from '$lib/stores/alerts';
 	import { cartItems } from '$lib/stores/cart';
 	import { navbarMinimzed } from '$lib/stores/interface';
+	import { savedItems } from '$lib/stores/wishlist';
+	import type { SelectedVariant, VariantGroup, VariantOption } from '$lib/types/interface';
 	import { generateProductId } from '$lib/utils/numberUtils';
 	import { unslugify } from '$lib/utils/stringUtils';
 	import type { Product } from '@chec/commerce.js/types/product';
@@ -48,32 +50,60 @@
 	export let productData: Product;
 
 	/* TODO Check for mistakes made on the backend. */
+	// let sizeOptions = null;
 	// let colorOptions = null;
+
 	let sizeOptions = parseProductSizes(productData);
 	let colorOptions = parseProductColors(productData);
 
 	let productTitle = unslugify(productSlug);
-	let selectedColor = colorOptions ? colorOptions[0] : null;
-	let selectedSize: string;
+	let selectedColor = colorOptions ? colorOptions.options[0] : null;
+	let selectedSize: VariantOption;
 
 	function addToCart() {
-		const itemVariants = {};
-		if (selectedColor) itemVariants['color'] = selectedColor.name;
-		if (selectedSize) itemVariants['size'] = selectedSize;
+		const selectedVariant: SelectedVariant[] = [];
+
+		if (selectedColor)
+			selectedVariant.push({
+				groupId: colorOptions.id,
+				groupName: colorOptions.name,
+				optionId: selectedColor.id,
+				optionName: selectedColor.name
+			});
+
+		if (selectedSize)
+			selectedVariant.push({
+				groupId: sizeOptions.id,
+				groupName: sizeOptions.name,
+				optionId: selectedSize.id,
+				optionName: selectedSize.name
+			});
 
 		cartItems.addItem({
-			id: generateProductId(productData.id, itemVariants),
+			// id: generateProductId(productData.id, itemVariants),
+			id: 'adwawd',
 			productId: productData.id,
 			price: productData.price.raw,
 			quanity: 1,
-			thumbnail: selectedColor ? selectedColor.assets[0].url : productData.assets[0].url,
+			thumbnail: selectedColorThumbnail,
 			title: productData.name,
-			variants: itemVariants
+			selectedVariant
 		});
 		alerts.addAlert('Added item to cart', 'success');
 	}
 
-	console.log($cartItems);
+	/* 	function addToWishlist() {
+		savedItems.addItem({
+			price: productData.price.raw,
+			title: productData.name,
+			productId: productData.id,
+			thumbnail: selectedColorThumbnail
+		});
+	} */
+
+	$: selectedColorThumbnail = selectedColor
+		? selectedColor.assets[0].url
+		: productData.assets[0].url;
 	console.log(colorOptions);
 </script>
 
@@ -103,7 +133,7 @@
 
 				<div class="details__block__color-options">
 					<RadioGroup bind:value={selectedColor}>
-						{#each colorOptions as color}
+						{#each colorOptions.options as color}
 							<RadioInput
 								name="size"
 								value={color}
@@ -124,8 +154,8 @@
 
 				<div class="details__block__size-options">
 					<RadioGroup bind:value={selectedSize}>
-						{#each sizeOptions as size}
-							<RadioInput name="size" value={size}>{size.toUpperCase()}</RadioInput>
+						{#each sizeOptions.options as size}
+							<RadioInput name="size" value={size}>{size.name.toUpperCase()}</RadioInput>
 						{/each}
 					</RadioGroup>
 				</div>
@@ -143,9 +173,9 @@
 			>
 				Add to cart
 			</SquareButton>
-			<div class="details__actions-save">
+			<!-- <div class="details__actions-save" on:click={addToWishlist}>
 				<Icon icon="ant-design:heart-outlined" width={20} height={20} color="black" />
-			</div>
+			</div> -->
 		</div>
 		<ToggleList title="Description" width="100%">
 			<p>

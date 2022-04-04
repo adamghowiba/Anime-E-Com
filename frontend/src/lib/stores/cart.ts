@@ -2,10 +2,9 @@ import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { browser } from '$app/env';
 import type { Product, CartProduct } from '$lib/types/interface';
+import { commerce } from '$lib/commerce/commerce';
 
 const localSavedItems = browser ? JSON.parse(localStorage?.getItem('cart-items'))?.items : [];
-
-type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 const createCartStore = () => {
 	const { subscribe, update, set }: Writable<CartProduct[]> = writable(localSavedItems || []);
@@ -17,16 +16,23 @@ const createCartStore = () => {
 
 	const addItem = (product: CartProduct) => {
 		const itemExsists = get(cartItems).find((item) => item.id === product.id);
-		console.log(itemExsists?.variants, product?.variants);
+		const sameVariants =
+			JSON.stringify(itemExsists?.variants) === JSON.stringify(product?.variants);
 
-		if (
-			itemExsists &&
-			JSON.stringify(itemExsists?.variants) === JSON.stringify(product?.variants)
-		) {
+		if (itemExsists && sameVariants) {
 			updateItem(itemExsists.id, { quanity: itemExsists.quanity + 1 });
 			return;
 		}
 
+		/* Add product to cart with variants */
+		// commerce.cart.add(
+		// 	product.productId,
+		// 	1,
+		// 	product.selectedVariant.reduce((acc, curr) => {
+		// 		acc[curr.groupId] = curr.optionId;
+		// 		return acc;
+		// 	}, {} as { [key: string]: string })
+		// );
 		update((data) => {
 			return [...data, { id: Math.floor(Math.random() * 1000), ...product }];
 		});

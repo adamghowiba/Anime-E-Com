@@ -44,7 +44,7 @@
 				id={item.id}
 				productId={item.productId}
 				quantity={item.quanity}
-				variants={item.variants}
+				variants={item.selectedVariant}
 			/>
 		{/each}
 	</ProductDrawer>

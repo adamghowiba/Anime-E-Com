@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cartItems } from '$lib/stores/cart';
 	import { savedItems } from '$lib/stores/wishlist';
+	import type { SelectedVariant, VariantGroup } from '$lib/types/interface';
 	import { generateProductId } from '$lib/utils/numberUtils';
 	import Alert from '../global/Alert.svelte';
 	import QuanityTicker from '../global/QuanityTicker.svelte';
@@ -11,16 +12,17 @@
 	export let title: string;
 	export let price: number;
 	export let itemType: ItemType;
-	export let variants: { [key: string]: unknown } = {};
+	export let variants: SelectedVariant[] = [];
 	export let id: string = null;
 	export let productId: string;
 	export let quantity: number;
 
 	function handleAddToCart() {
-		savedItems.removeItem(id);
+		savedItems.removeItem(productId);
 
 		cartItems.addItem({
-			id: generateProductId(productId, variants),
+			id: 'awdawd1',
+			// id: generateProductId(productId, variants),
 			productId,
 			price,
 			title,
@@ -38,6 +40,8 @@
 		cartItems.updateItem(id, { quanity: ++quantity });
 	}
 
+	console.log(variants);
+
 	$: items = itemType == 'cart' ? cartItems : savedItems;
 </script>
 
@@ -49,8 +53,8 @@
 
 		<div class="item__variants">
 			{#if itemType == 'cart' && Object.keys(variants).length >= 1}
-				{#each Object.entries(variants) as [key, value]}
-					<span>{key}: {value}</span>
+				{#each variants as variant}
+					<span>{variant.groupName}: {variant.optionName}</span>
 				{/each}
 			{/if}
 			<span class="item__price">${price}</span>

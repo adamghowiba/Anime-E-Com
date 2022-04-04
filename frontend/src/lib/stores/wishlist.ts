@@ -17,7 +17,6 @@ const crateWishlistStore = () => {
 
 	const addItem = (product: WishlistProduct) => {
 		update((data) => {
-			/* TODO: Fix whats going on here with id */
 			return [...data, product];
 		});
 	};
