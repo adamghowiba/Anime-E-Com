@@ -4,8 +4,15 @@
 	import { onMount } from 'svelte';
 	import CartItem from '../product/CartItem.svelte';
 	import { fly, fade } from 'svelte/transition';
-	import { savedItems } from '$lib/stores/cart';
+	import { savedItems } from '$lib/stores/wishlist';
 	import Button from '../global/Button.svelte';
+
+	export let drawerType: 'cart' | 'saved';
+	export let itemCount: number;
+
+	$: empty = itemCount <= 0;
+
+	$: isCart = drawerType == 'cart';
 
 	onMount(() => {
 		// $overlay = true;
@@ -16,28 +23,37 @@
 </script>
 
 <!-- <div class="saved"> -->
-<div class="saved" in:fly={{ x: 400, duration: 250 }} out:fade={{ duration: 150 }}>
-	<div class="saved__header">
-		<h6>Saved Items <strong class="saved__count">({$savedItems.length})</strong></h6>
+<div class="drawer" in:fly={{ x: 400, duration: 250 }} out:fade={{ duration: 150 }}>
+	<div class="drawer__header">
+		<h5>
+			{drawerType == 'saved' ? 'Saved Items ' : 'Cart '}<strong class="drawer__count"
+				>({itemCount})</strong
+			>
+		</h5>
 
-		<div class="saved__exit" on:click>
+		<div class="drawer__exit" on:click>
 			<Icon icon="bi:x-lg" width={17} height={17} />
 		</div>
 
 		<hr />
 	</div>
 
-	<div class="saved__items">
-		{#if $savedItems?.length <= 0}
-			<div class="saved__empty">
-				<img src="/icons/wishlist_empty.svg" alt="Broken hearts for empty wishlist" />
+	<div class="drawer__items">
+		{#if empty}
+			<div class="drawer__empty">
+				<img
+					src="/icons/{isCart ? 'cart' : 'wishlist'}_empty.svg"
+					alt="Broken hearts for empty wishlist"
+				/>
 
-				<div class="saved__empty__content">
-					<h4>Your wishlist is empty</h4>
-					<p>Any items that you save while browsing will be added here, to your wishlist</p>
+				<div class="drawer__empty__content">
+					<h4>Your {isCart ? 'cart' : 'wishlist'} is empty</h4>
+					<p>
+						Any items that you {isCart ? 'add' : 'save'} while browsing will be added here, to your wishlist
+					</p>
 				</div>
 
-				<div class="saved__empty__buttons">
+				<div class="drawer__empty__buttons">
 					<Button href="/collections/hoodies" buttonColor="black" width="300px"
 						>Shop T-Shirts</Button
 					>
@@ -46,21 +62,13 @@
 				</div>
 			</div>
 		{:else}
-			{#each $savedItems || [] as item}
-				<CartItem
-					itemType="saved"
-					price={item.price}
-					thumbnail={item.thumbnail}
-					title={item.title}
-					id={item.id}
-				/>
-			{/each}
+			<slot />
 		{/if}
 	</div>
 </div>
 
 <style lang="scss">
-	.saved {
+	.drawer {
 		height: 100%;
 		min-width: 440px;
 		padding: 1rem;
@@ -81,7 +89,8 @@
 			top: 0;
 		}
 
-		&__header h6 {
+		&__header h5 {
+			font-size: 18px;
 			margin-bottom: 1rem;
 		}
 
@@ -89,6 +98,12 @@
 			position: absolute;
 			right: 0;
 			top: 0;
+		}
+
+		&__count {
+			font-size: var(--text-sm);
+			position: relative;
+			top: -1px;
 		}
 
 		&__items {
@@ -108,7 +123,7 @@
 		}
 	}
 
-	.saved__empty {
+	.drawer__empty {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;

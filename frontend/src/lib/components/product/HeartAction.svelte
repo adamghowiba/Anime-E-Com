@@ -1,11 +1,13 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import LocalIcon from '../global/LocalIcon.svelte';
 
 	export let saved: boolean;
 </script>
 
 <button class="heart" class:saved on:click>
-	<Icon icon="ant-design:heart-outlined" width={20} height={20} />
+	<LocalIcon icon="heart" />
+	<!-- <Icon icon="ant-design:heart-outlined" width={20} height={20} /> -->
 </button>
 
 <style lang="scss">
@@ -26,6 +28,7 @@
 		appearance: none;
 		border: none;
 		outline: none;
+		z-index: 1;
 
 		&.saved {
 			background-color: coral;

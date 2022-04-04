@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import ProductCard from '$lib/components/product/ProductCard.svelte';
 	import Hero from '$lib/components/home/Hero.svelte';
 	import Navbar from '$lib/components/nav/Navbar.svelte';
@@ -6,6 +6,7 @@
 	import CategoryTile from '$lib/components/product/CategoryTile.svelte';
 	import { onMount } from 'svelte';
 	import { gsap } from 'gsap';
+	import ContentCta from '$lib/components/home/ContentCTA.svelte';
 
 	onMount(async () => {
 		// const ScrollTrigger = await import('gsap/ScrollTrigger');
@@ -22,6 +23,10 @@
 		// 	}
 		// });
 	});
+
+	let title: string;
+
+	$: console.log(title);
 </script>
 
 <Hero
@@ -30,7 +35,7 @@
 
 	We are well aware."
 	button={{ link: '', text: 'shop' }}
-	imgSrc='/images/atsuko_people.jpg'
+	imgSrc="/images/atsuko_people.jpg"
 />
 
 <FeaturedProducts title="New releases" subtitle="mens" button={{ link: '/', name: 'View All' }}>
@@ -86,7 +91,7 @@
 	/>
 </div>
 
-<FeaturedProducts title="BEST OF ANIME"  button={{ link: '/', name: 'View All' }}>
+<FeaturedProducts title="BEST OF ANIME" button={{ link: '/', name: 'View All' }}>
 	<ProductCard
 		thumbnail="/images/products/gym_shark.jpg"
 		price={42}
@@ -139,22 +144,28 @@
 	/>
 </section>
 
+<ContentCta>
+	OUR PIECES ARE DESIGNED TO CONTOUR AND ENHANCE EVERY CURVE ON EVERY SIZE AND SHAPE OF WOMAN WHILST
+	BEING STYLISH AND COMFORTABLE
+</ContentCta>
+
 <!-- <div class="filler"></div> -->
 <style lang="scss">
 	.categories {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		grid-template-rows: 1fr 1fr;
+		grid-template-rows: 40vh 40vh;
 		gap: 10px;
+		padding-left: 0;
+		padding-right: 0;
+		// overflow-y: hidden;
 
 		&__large {
 			grid-row: 1/-1;
+			height: 100%;
 		}
 	}
 	.hero-section {
 		margin-top: 3rem;
-	}
-	.filler {
-		margin-bottom: 10rem;
 	}
 </style>

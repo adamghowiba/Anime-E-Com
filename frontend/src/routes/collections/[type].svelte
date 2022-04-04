@@ -30,7 +30,7 @@
 	import Button from '$lib/components/global/Button.svelte';
 	import ProductHeader from '$lib/components/global/ProductHeader.svelte';
 	import ProductCard from '$lib/components/product/ProductCard.svelte';
-	import { savedItems } from '$lib/stores/cart';
+	import { savedItems } from '$lib/stores/wishlist';
 
 	export let products: Product[];
 	export let type: string;
@@ -70,11 +70,11 @@
 	<div class="products">
 		{#each filteredProducts || products as item}
 			<ProductCard
-				thumbnail={item.image.url}
+				thumbnail={item?.image?.url}
 				price={parseInt(item.price.raw.toString())}
 				title={item.name}
-				id={item.id}
-				saved={Boolean($savedItems.find((items) => items.id === item.id))}
+				productId={item.id}
+				saved={Boolean($savedItems.find((items) => items.productId === item.id))}
 			/>
 		{/each}
 	</div>

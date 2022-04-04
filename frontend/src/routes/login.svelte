@@ -7,13 +7,6 @@
 	let username: string;
 	let alertCount = 0;
 
-	const addAlert = () => {
-		alerts.addAlert(
-			'This is a test alert adawdawdawda wdad awd awdad awdaw d #' + ++alertCount,
-			'warning'
-		);
-	};
-
 	onMount(() => {});
 </script>
 
@@ -33,7 +26,6 @@
 		<a href="/register" class="create-account">Create an account </a>
 	</span>
 
-	<Button buttonColor="black" on:click={addAlert}>Add Alert</Button>
 </section>
 
 <style lang="scss">
