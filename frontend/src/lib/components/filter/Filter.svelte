@@ -41,6 +41,7 @@
 		<FilterOption name="Attack On Titan" value="attack-on-titan" />
 		<!-- <FilterOption name="FIT" value="fit" /> -->
 	</FilterGroup>
+
 	<FilterGroup name="Type" bind:value={filters} expanded>
 		<FilterOption name="T-Shirts" value="t-shirts" />
 		<FilterOption name="Hoodies" value="hoodies" />
@@ -58,7 +59,7 @@
 		max-width: 278px;
 		width: 100%;
 		border: 1px solid var(--color-gray-s1);
-		height: 100%;
+		height: auto;
 
 		&__header {
 			display: flex;

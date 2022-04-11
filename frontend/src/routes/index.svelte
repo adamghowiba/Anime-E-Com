@@ -3,30 +3,11 @@
 	import Hero from '$lib/components/home/Hero.svelte';
 	import Navbar from '$lib/components/nav/Navbar.svelte';
 	import FeaturedProducts from '$lib/components/product/FeaturedProducts.svelte';
-	import CategoryTile from '$lib/components/product/CategoryTile.svelte';
+	import CategoryTile from '$lib/components/home/CategoryTile.svelte';
 	import { onMount } from 'svelte';
 	import { gsap } from 'gsap';
 	import ContentCta from '$lib/components/home/ContentCTA.svelte';
 
-	onMount(async () => {
-		// const ScrollTrigger = await import('gsap/ScrollTrigger');
-		// gsap.registerPlugin(ScrollTrigger.ScrollTrigger);
-		// gsap.from(['body', 'nav', '.topbar'], {
-		// 	backgroundColor: '#323232',
-		// 	color: 'white',
-		// 	scrollTrigger: {
-		// 		trigger: 'body',
-		// 		start: 'top+=300px',
-		// 		end: 'top+=310px',
-		// 		markers: true,
-		// 		scrub: 1
-		// 	}
-		// });
-	});
-
-	let title: string;
-
-	$: console.log(title);
 </script>
 
 <Hero

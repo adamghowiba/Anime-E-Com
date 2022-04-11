@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { cartItems } from '$lib/stores/cart';
 	import { savedItems } from '$lib/stores/wishlist';
-	import type { SelectedVariant, VariantGroup } from '$lib/types/interface';
-	import { generateProductId } from '$lib/utils/numberUtils';
-	import Alert from '../global/Alert.svelte';
-	import QuanityTicker from '../global/QuanityTicker.svelte';
+	import type { SelectedVariant } from '@chec/commerce.js/types/selected-variant';
+	import QuanityTicker from '$lib/components/buttons/QuanityTicker.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	type ItemType = 'cart' | 'wishlist';
 
@@ -17,17 +16,7 @@
 	export let productId: string;
 	export let quantity: number;
 
-	function handleAddToCart() {
-		savedItems.removeItem(productId);
-
-		cartItems.addItem({
-			productId,
-			price,
-			title,
-			thumbnail,
-			quanity: 1
-		});
-	}
+	const dispatch = createEventDispatcher();
 
 	function removeQuantity() {
 		if (quantity == 0) return;
@@ -39,8 +28,6 @@
 	}
 
 	console.log(variants);
-
-	$: items = itemType == 'cart' ? cartItems : savedItems;
 </script>
 
 <div class="item">
@@ -50,23 +37,17 @@
 		<h5>{title}</h5>
 
 		<div class="item__variants">
-			{#if itemType == 'cart' && Object.keys(variants).length >= 1}
+			{#if variants.length >= 1}
 				{#each variants as variant}
-					<span>{variant.groupName}: {variant.optionName}</span>
+					<span>{variant.group_name}: {variant.option_name}</span>
 				{/each}
 			{/if}
 			<span class="item__price">${price}</span>
 		</div>
 
 		<div class="item__actions">
-			{#if itemType == 'wishlist'}
-				<button on:click={() => items.removeItem(productId)}>Remove</button>
-				<span>|</span>
-				<button on:click={handleAddToCart}>Add To Cart</button>
-			{:else}
-				<QuanityTicker {quantity} on:add={addQuantity} on:remove={removeQuantity} />
-				<button on:click={() => items.removeItem(id)}>Remove</button>
-			{/if}
+			<QuanityTicker {quantity} on:add={addQuantity} on:remove={removeQuantity} />
+			<button on:click={() => dispatch('handleRemove')}>Remove</button>
 		</div>
 	</div>
 </div>
@@ -74,7 +55,7 @@
 <style lang="scss">
 	.item {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 1.5rem;
 		padding-bottom: 20px;
 		border-bottom: 1px solid var(--color-gray-s2);
@@ -93,12 +74,13 @@
 
 		&__image {
 			width: 90px;
-			// height: 125px;
-			height: 100%;
-			object-fit: contain;
+			height: 100px;
+			object-position: 50%;
+			object-fit: cover;
 		}
 
 		&__info {
+			width: 100%;
 			display: flex;
 			flex-direction: column;
 		}
@@ -116,6 +98,7 @@
 		}
 
 		&__actions {
+			width: 100%;
 			display: flex;
 			gap: 7px;
 			font-weight: var(--fw-medium);

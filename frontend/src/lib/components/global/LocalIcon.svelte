@@ -3,6 +3,7 @@
 
 	export let icon: typeof ICONS[number];
 	export let iconColor = 'black';
+	export let fillColor = 'transparent';
 </script>
 
 {#if icon == 'heart'}
@@ -25,7 +26,8 @@
 						<polygon id="Fill-1" points="0 24 24 24 24 0 0 0" />
 						<polygon
 							id="Stroke-2"
-							stroke="#000000"
+							stroke="{iconColor}"
+							fill="{fillColor}"
 							stroke-width="2"
 							points="9.377 6 6.424 6 4 10 12 18 20 10 17.594 6 14.605 6 12 9"
 						/>

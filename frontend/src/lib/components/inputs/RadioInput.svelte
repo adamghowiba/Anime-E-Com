@@ -28,8 +28,11 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: var(--width, 71px);
-		height: var(--height, 48px);
+		min-width: var(--width, 71px);
+		min-height: var(--height, 48px);
+		height: auto;
+		width: auto;
+		padding: 0 12px;
 		border: 1px solid black;
 		transition: background-color 0.085s linear, color 0.085s linear;
 
@@ -44,8 +47,9 @@
         }
 
 		:global(img) {
-			width: 100%;
-			height: 100%;
+			width: var(--width);
+			height: var(--height);
+			object-fit: contain;
 		}
 	}
 	input {

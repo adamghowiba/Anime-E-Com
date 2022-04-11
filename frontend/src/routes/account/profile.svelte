@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ToggleList from '$lib/components/account/ToggleList.svelte';
 	import Breadcrumbs from '$lib/components/global/Breadcrumbs.svelte';
-	import SquareButton from '$lib/components/global/SquareButton.svelte';
+	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 
 	const profile = { username: '' };

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { overlay } from '$lib/stores/interface';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import Button from '../global/Button.svelte';
+	import Button from '../buttons/Button.svelte';
 	import { clickOutside } from '$lib/utils/clickOutside';
 
 	export let title: string;

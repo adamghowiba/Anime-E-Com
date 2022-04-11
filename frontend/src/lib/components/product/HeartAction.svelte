@@ -6,7 +6,7 @@
 </script>
 
 <button class="heart" class:saved on:click>
-	<LocalIcon icon="heart" />
+	<LocalIcon icon="heart" fillColor={saved ? 'black' : 'transparent'} />
 	<!-- <Icon icon="ant-design:heart-outlined" width={20} height={20} /> -->
 </button>
 
@@ -15,8 +15,7 @@
 		position: absolute;
 		top: 12px;
 		right: 12px;
-		background-color: hsla(60, 25%, 98%, 0.8);
-		box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+		background-color: transparent;
 		backdrop-filter: blur(20px);
 		border-radius: 50%;
 		// width:  35px;
@@ -29,10 +28,6 @@
 		border: none;
 		outline: none;
 		z-index: 1;
-
-		&.saved {
-			background-color: coral;
-		}
 
 		&:hover {
 			cursor: pointer;

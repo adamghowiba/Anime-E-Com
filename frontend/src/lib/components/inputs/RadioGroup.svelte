@@ -24,6 +24,7 @@
 <style lang="scss">
 	.group {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 7px;
 	}
 </style>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	type InputType = 'password' | 'text' | 'email' | 'phone';
 	type InputSize = 'base' | 'large';
+
 	export let placeholder: string = null;
 	export let label: string = null;
 	export let required: boolean = false;
@@ -8,9 +9,39 @@
 	export let name: string;
 	export let type: InputType = 'text';
 	export let size: InputSize = 'base';
+
+	/* TODO: Do we need both? */
+	export let error: string = null;
+	export let isValid: boolean = false;
+
+	function formatValidationMessage(inputElement: HTMLInputElement) {
+		let validity = inputElement.validity;
+
+		if (validity.valueMissing) {
+			inputElement.setCustomValidity(`Please enter your ${placeholder.toLowerCase() || label}`);
+			return;
+		}
+
+		inputElement.setCustomValidity('');
+	}
+
+	function handleInputBlur(event: FocusEvent) {
+		const target = event.target as HTMLInputElement;
+
+		formatValidationMessage(target);
+
+		if (!target.checkValidity()) {
+			isValid = false;
+			error = target.validationMessage;
+			return;
+		}
+
+		isValid = true;
+		error = null;
+	}
 </script>
 
-<div class="wrapper {size}">
+<div class="wrapper {size}" class:error>
 	<label for={name}>
 		{#if label}
 			{label}
@@ -18,13 +49,17 @@
 		{/if}
 	</label>
 	{#if type == 'text'}
-		<input type="text" {name} {placeholder} {required} bind:value />
+		<input type="text" on:blur={handleInputBlur} {name} {placeholder} {required} bind:value />
 	{:else if type == 'email'}
-		<input type="email" {name} {placeholder} {required} bind:value />
+		<input type="email" on:blur={handleInputBlur} {name} {placeholder} {required} bind:value />
 	{:else if type == 'password'}
-		<input type="password" {name} {placeholder} {required} bind:value />
+		<input type="password" on:blur={handleInputBlur} {name} {placeholder} {required} bind:value />
 	{:else if type == 'phone'}
-		<input type="phone" {name} {placeholder} {required} bind:value />
+		<input type="tel" on:blur={handleInputBlur} {name} {placeholder} {required} bind:value />
+	{/if}
+
+	{#if error}
+		<span class="error__message">{error}</span>
 	{/if}
 </div>
 
@@ -34,7 +69,16 @@
 		flex-direction: column;
 		gap: 7px;
 	}
+	.error {
+		input {
+			border: 1px solid var(--color-red);
+		}
 
+		&__message {
+			color: var(--color-red);
+			font-size: 14px;
+		}
+	}
 	label {
 		color: #6e6e6e;
 		text-transform: uppercase;
@@ -67,6 +111,6 @@
 		}
 		label {
 			font-size: 14px;
-		}	
+		}
 	}
 </style>

@@ -1,5 +1,8 @@
 <script lang="ts">
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
+
 	import { alerts } from '$lib/stores/alerts';
+	import { navbarLoading } from '$lib/stores/interface';
 	import { savedItems } from '$lib/stores/wishlist';
 	import { slugify } from '$lib/utils/stringUtils';
 	import Alert from '../global/Alert.svelte';
@@ -29,6 +32,7 @@
 		savedItems.removeItem(productId);
 		alerts.addAlert('Removed item from wishlist', 'success');
 	};
+
 </script>
 
 {#if quickviewPopup}

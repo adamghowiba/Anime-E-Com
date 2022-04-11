@@ -50,7 +50,7 @@
 		gap: 1rem;
 		border-top: 1px solid var(--color-gray-s1);
 		padding: 12px;
-		margin-bottom: 1rem;
+		margin-bottom: 10px;
 
 		&__header {
 			display: flex;

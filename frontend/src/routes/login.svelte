@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/components/global/Button.svelte';
+	import Button from '$lib/components/buttons/Button.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 	import { alertLocation, alerts } from '$lib/stores/alerts';
 	import { onMount } from 'svelte';

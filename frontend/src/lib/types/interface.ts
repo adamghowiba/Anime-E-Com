@@ -19,14 +19,6 @@ export interface VariantOption {
 	assets?: Asset[];
 }
 
-export interface SelectedVariant {
-	groupName: string;
-	groupId: string;
-	optionName: string;
-	optionId: string;
-	optionAssets?: string;
-}
-
 
 export interface Product {
 	thumbnail: string;
@@ -40,5 +32,4 @@ export interface Product {
 export interface CartProduct extends Product {
 	quanity: number;
 	variants?: VariantGroup[];
-	selectedVariant?: SelectedVariant[];
 }

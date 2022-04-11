@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Button from '../global/Button.svelte';
+	import Button from '../buttons/Button.svelte';
 	import type { ContentAlign } from '$lib/types/types';
-import SquareButton from '../global/SquareButton.svelte';
+	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 
 	interface ButtonData {
 		text: string;
@@ -18,7 +18,7 @@ import SquareButton from '../global/SquareButton.svelte';
 <div class="block {contentAlign}" style="--color: {color}">
 	<h2>{title}</h2>
 	<p>{subtitle}</p>
-	<SquareButton outlined buttonColor="white"> Shop Now </SquareButton>
+	<SquareButton outlined buttonColor="white">Shop Now</SquareButton>
 	<!-- <Button buttonColor="white">Shop</Button> -->
 </div>
 
@@ -44,7 +44,8 @@ import SquareButton from '../global/SquareButton.svelte';
 			line-height: 1.3;
 		}
 
-		&.center, &.btm-center {
+		&.center,
+		&.btm-center {
 			justify-content: center;
 			align-items: center;
 		}

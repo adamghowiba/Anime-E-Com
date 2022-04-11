@@ -1,7 +1,7 @@
 <script lang="ts">
 	import HeaderBlock from '../content/HeaderBlock.svelte';
 	import type { ContentAlign } from '$lib/types/types';
-	import SquareButton from '../global/SquareButton.svelte';
+	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 	import { gsap, Power3 } from 'gsap';
 
 	export let title: string;

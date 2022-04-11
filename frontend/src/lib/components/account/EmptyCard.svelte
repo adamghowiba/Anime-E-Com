@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import SquareButton from '../global/SquareButton.svelte';
+	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 
 	export let icon: string;
 	export let title: string;

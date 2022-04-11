@@ -1,18 +1,14 @@
 <script lang="ts">
-	import { overlay } from '$lib/stores/interface';
+	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
-	import CartItem from '../product/CartItem.svelte';
-	import { fly, fade } from 'svelte/transition';
-	import { savedItems } from '$lib/stores/wishlist';
-	import Button from '../global/Button.svelte';
-import SquareButton from './SquareButton.svelte';
+	import { fade, fly } from 'svelte/transition';
+	import Button from '../buttons/Button.svelte';
 
 	export let drawerType: 'cart' | 'saved';
 	export let itemCount: number;
 
 	$: empty = itemCount <= 0;
-
 	$: isCart = drawerType == 'cart';
 
 	onMount(() => {
@@ -55,19 +51,17 @@ import SquareButton from './SquareButton.svelte';
 				</div>
 
 				<div class="drawer__empty__buttons">
-					<Button href="/collections/hoodies" buttonColor="black" width="300px"
-						>Shop T-Shirts</Button
-					>
-					<Button href="/collections/hoodies" buttonColor="black" width="300px">Shop Hoodies</Button
-					>
+					<SquareButton  width="100%" size="small" outlined>Shop All Products</SquareButton>
+					<SquareButton  width="100%" size="small" buttonColor="gray" outlined>Shop Best Sellers</SquareButton>
+			
 				</div>
 			</div>
 		{:else}
 			<slot />
+			<!-- <SquareButton width="100%" outlined buttonColor="blue">Checkout</SquareButton>
+			<SquareButton width="100%" href="/cart" outlined>Your Bag</SquareButton> -->
 		{/if}
 	</div>
-
-	<SquareButton buttonColor='black' width="100%" href="/cart"> View Cart </SquareButton>
 </div>
 
 <style lang="scss">
@@ -114,6 +108,7 @@ import SquareButton from './SquareButton.svelte';
 			flex-direction: column;
 			gap: 2rem;
 			overflow-y: auto;
+			height: 100%;
 		}
 
 		hr {
