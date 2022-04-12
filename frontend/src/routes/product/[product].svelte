@@ -85,7 +85,7 @@
 	/>
 </header>
 
-<section class="product">
+<section class="product container container--lg">
 	<ProductSlider images={selectedColorImages} />
 
 	<div class="details" class:extraTopSpace={!$navbarMinimzed}>

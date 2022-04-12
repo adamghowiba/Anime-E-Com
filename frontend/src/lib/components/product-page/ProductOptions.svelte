@@ -8,6 +8,7 @@
 		ProductVariantGroup,
 		ProductVariantOption
 	} from '@chec/commerce.js/types/product-variant-group';
+	import { onMount } from 'svelte';
 
 	type SelectedOption = Omit<SelectedVariant, 'price'> & { assets: Asset[] };
 
@@ -41,7 +42,13 @@
 		<div class="options__block">
 			<RadioGroup bind:value={selectedVariants[group.name]}>
 				{#each group.options as option}
-					<RadioInput name="size" value={parseSelectedVariant(group, option)} border={true}>
+					<RadioInput
+						name="size"
+						value={parseSelectedVariant(group, option)}
+						border={!isColorGroup}
+						selectEffect={isColorGroup ? 'border' : 'fill'}
+						hoverable={!isColorGroup}
+					>
 						{#if option.assets.length >= 1}
 							<img
 								class="options__image"
@@ -69,9 +76,9 @@
 			gap: 7px;
 		}
 
-        &__image {
-            height: auto;
-        }
+		&__image {
+			height: auto;
+		}
 
 		h6 {
 			text-transform: uppercase;

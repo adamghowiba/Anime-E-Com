@@ -4,12 +4,15 @@
 	export let title: string;
 	export let desc: string = null;
 	export let actionable: boolean = false;
+	export let padding: string = '2px 0px';
 </script>
 
-<div class="block">
+<div class="block" style:padding>
 	<div class="block__info">
 		<span class="block__title">{title}</span>
-		<span class="block__desc">{desc}</span>
+		{#if desc}
+			<span class="block__desc">{desc}</span>
+		{/if}
 	</div>
 
 	<div class="block__action">
@@ -36,7 +39,7 @@
 			gap: 4px;
 			max-width: 20ch;
 			flex-direction: column;
-			padding: 12px 5px;
+			padding: 12px 0px;
 		}
 
 		&__title {

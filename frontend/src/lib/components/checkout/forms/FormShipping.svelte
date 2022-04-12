@@ -11,7 +11,9 @@
 	export let checkoutData: ShippingMethod;
 	export let shippingMethod: ShippingMethod[];
 
-	$: console.log(shippingMethod);
+	$: isFormCompleted = Boolean(checkoutData.id);
+
+	$: console.log(checkoutData);
 </script>
 
 <div class="form-group">
@@ -20,10 +22,18 @@
 		{#if shippingMethod}
 			<RadioGroup bind:value={checkoutData}>
 				{#each shippingMethod as method}
-					<RadioInput name="test" value={method} width="100%">
-						<InfoBlock title={method.description} desc="Arrives Apr 16 - Apr 19"
-							>{method.price.formatted_with_symbol}</InfoBlock
-						>
+					<RadioInput
+						name="test"
+						value={method}
+						width="100%"
+						hoverable={false}
+						selectEffect="border"
+						border={true}
+						borderColor="var(--color-gray-s1)"
+					>
+						<InfoBlock title={method.description} desc="Arrives Apr 16 - Apr 19" padding="5px">
+							{method.price.formatted_with_symbol}
+						</InfoBlock>
 					</RadioInput>
 				{/each}
 			</RadioGroup>
@@ -32,10 +42,20 @@
 		{/if}
 	</div>
 
-	<SquareButton width="100%" outlined size="small" on:click>Continue</SquareButton>
+	<SquareButton width="100%" outlined size="small" on:click disabled={!isFormCompleted}
+		>Continue</SquareButton
+	>
 </div>
 
 <style lang="scss">
+	.form-group {
+		gap: 2rem;
+
+		&__subgroup {
+			gap: 1.5rem;
+		}
+	}
+
 	h5 {
 		font-size: 18px;
 		color: black;

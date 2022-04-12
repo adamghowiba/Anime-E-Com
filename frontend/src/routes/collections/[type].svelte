@@ -29,14 +29,26 @@
 	import { savedItems } from '$lib/stores/wishlist';
 	import { getProductsByType } from '$lib/commerce/collectionUtils';
 	import ProductCardSkeleton from '$lib/components/skeleton/ProductCardSkeleton.svelte';
+	import { onMount } from 'svelte';
 
 	export let type: string;
+
 	let products: Product[];
+	let filters: string[] = [];
 
 	async function getProductCollection() {
 		const productData = await getProductsByType(type);
 
-		products = productData.map((prod) => {
+		products = addCategoriesToItemMeta(productData);
+	}
+	getProductCollection();
+
+	/*  Adds the categories of the product to the itemMeta
+		Makes it easier to search through a products catagories 
+		to filter by
+	*/
+	function addCategoriesToItemMeta(products: Product[]) {
+		let taggedProducts = products.map((prod) => {
 			prod['itemMeta'] = [
 				...prod.categories.flatMap((cat) => cat.slug),
 				...prod.variant_groups.flatMap((vari) =>
@@ -45,32 +57,23 @@
 			];
 			return prod;
 		});
+
+		return taggedProducts;
 	}
-	getProductCollection();
 
-	let filters: string[] = [];
+	function getFilteredProducts(filters: string[]): Product[] {
+		if (!products || filters.length <= 0) return;
 
-	/* Add product catagories to itemMeta for filtering */
-	// products = products.map((prod) => {
-	// 	prod['itemMeta'] = [
-	// 		...prod.categories.flatMap((cat) => cat.slug),
-	// 		...prod.variant_groups.flatMap((vari) =>
-	// 			vari.options.flatMap((option) => option.name.toLowerCase())
-	// 		)
-	// 	];
-	// 	return prod;
-	// });
+		return products.filter((prod) => {
+			return filters.some((filter) => {
+				return (prod['itemMeta'] as string[]).includes(filter);
+			});
+		});
+	}
 
-	$: filteredProducts =
-		products && filters.length >= 1
-			? products.filter((prod) => {
-					return filters.some((filter) => {
-						return (prod['itemMeta'] as string[]).includes(filter);
-					});
-			  })
-			: products;
-
+	$: filteredProducts = getFilteredProducts(filters) || products;
 	$: console.log('Filtered products', filteredProducts);
+	$: console.log('Filters', filters);
 </script>
 
 <CollectionHeader subtitle="Mens" title={type} />
@@ -81,8 +84,8 @@
 	</div>
 
 	<div class="products">
-		{#if products && filteredProducts}
-			{#each products as item}
+		{#if products}
+			{#each filteredProducts || products as item}
 				<ProductCard
 					thumbnail={item?.image?.url}
 					price={parseInt(item.price.raw.toString())}

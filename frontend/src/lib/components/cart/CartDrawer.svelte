@@ -30,11 +30,16 @@
 	}
 
 	$: {
-		loadCartContents();
+		if ($cartCount > 0) loadCartContents();
 	}
 </script>
 
-<ProductDrawer drawerType="cart" itemCount={$cartCount} on:click={() => dispatch('cartClosed')}>
+<ProductDrawer
+	drawerType="cart"
+	itemCount={$cartCount}
+	subtotal={cartData?.subtotal?.formatted_with_symbol}
+	on:click={() => dispatch('cartClosed')}
+>
 	{#if !cartContents}
 		{#each Array($cartCount) as _}
 			<CartItemSkeleton />
@@ -42,7 +47,6 @@
 	{:else}
 		{#each cartContents as item}
 			<CartItem
-				itemType="cart"
 				price={item.price.raw}
 				thumbnail={item.image.url}
 				title={item.product_name}
@@ -53,54 +57,8 @@
 				on:handleRemove={() => handleRemove(item.id)}
 			/>
 		{/each}
-
-		<!-- Todo: Choose betweeen Bottom Footer / normal position -->
-		<!-- <footer class="footer" style="margin-top: auto; position: relative; top: -10px"> -->
-		<footer class="footer">
-			<div class="footer__total">
-				<h6>total</h6>
-				<h5 class="footer__price">
-					{cartData.subtotal.formatted_with_symbol}
-				</h5>
-			</div>
-
-			<div class="footer__actions">
-				<SquareButton width="99%" outlined buttonColor="blue">Checkout</SquareButton>
-				<SquareButton width="99%" href="/cart" outlined>Your Bag</SquareButton>
-			</div>
-		</footer>
 	{/if}
 </ProductDrawer>
 
 <style lang="scss">
-	.footer {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-		width: 100%;
-
-		&__total {
-			text-transform: uppercase;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			border-bottom: 1px solid var(--color-gray-s2);
-			padding-bottom: 1rem;
-		}
-
-		&__actions {
-			display: flex;
-			flex-direction: column;
-			gap: 1rem;
-		}
-
-		&__price {
-			font-weight: var(--fw-semibold);
-			font-size: 16px;
-		}
-
-		h6 {
-			font-size: 14px;
-		}
-	}
 </style>

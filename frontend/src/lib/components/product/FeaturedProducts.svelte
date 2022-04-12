@@ -27,22 +27,22 @@
 		gap: 2rem;
 		display: flex;
 		flex-direction: column;
-
+		
 		header {
 			justify-content: space-between;
 			align-items: center;
 			display: flex;
-
+			
 			a {
 				text-decoration: underline;
 				font-weight: var(--fw-semibold);
 			}
 		}
-
+		
 		&__title {
 			text-transform: uppercase;
 		}
-
+		
 		&__title h5 {
 			font-weight: var(--fw-semibold);
 		}

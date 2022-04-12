@@ -32,7 +32,9 @@
 	<div class="group__header" on:click={handleGroupClick}>
 		<h6>{name}</h6>
 
-		<Icon icon="bi:triangle-fill" rotate={expanded ? 0 : 90} width={11} height={11} />
+		<div class="group__header__icon">
+			<Icon icon="akar-icons:chevron-down" rotate={expanded ? 0 : 90} width={15} height={15} />
+		</div>
 	</div>
 
 	{#if expanded}
@@ -48,15 +50,24 @@
 		justify-content: center;
 		flex-direction: column;
 		gap: 1rem;
-		border-top: 1px solid var(--color-gray-s1);
-		padding: 12px;
+		border-top: 1px solid var(--color-gray-s2);
+		padding: 12px 0;
 		margin-bottom: 10px;
 
 		&__header {
 			display: flex;
 			justify-content: space-between;
-			// align-items: center;
+			align-items: center;
 			text-transform: capitalize;
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+
+		&__header__icon {
+			position: relative;
+			top: -2px;
 		}
 
 		&__options {
@@ -70,6 +81,7 @@
 		}
 
 		h6 {
+			font-size: 14px;
 			font-weight: var(--fw-semibold);
 		}
 	}

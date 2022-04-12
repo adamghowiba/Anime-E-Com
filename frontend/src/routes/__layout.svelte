@@ -55,8 +55,10 @@
 	});
 
 	/* TIP: Hide scroll when overlay is open */
-	$: if (browser && $overlay) {
-		document.body.style.overflow = `${$overlay ? 'hidden' : 'auto'}`;
+	$: {
+		if (browser && $overlay) {
+			document.body.style.overflow = `${$overlay ? 'hidden' : 'auto'}`;
+		}
 	}
 
 	/* TIP: Open overlay when drawer opens */

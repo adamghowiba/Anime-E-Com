@@ -5,16 +5,17 @@
 	import QuanityTicker from '$lib/components/buttons/QuanityTicker.svelte';
 	import { createEventDispatcher } from 'svelte';
 
-	type ItemType = 'cart' | 'wishlist';
-
 	export let thumbnail: string;
 	export let title: string;
 	export let price: number;
-	export let itemType: ItemType;
 	export let variants: SelectedVariant[] = [];
 	export let id: string = null;
 	export let productId: string;
 	export let quantity: number;
+
+	/* Toggleable UI Elements */
+	export let quantityTicker: boolean = true;
+	export let removeAction: boolean = true;
 
 	const dispatch = createEventDispatcher();
 
@@ -46,8 +47,12 @@
 		</div>
 
 		<div class="item__actions">
-			<QuanityTicker {quantity} on:add={addQuantity} on:remove={removeQuantity} />
-			<button on:click={() => dispatch('handleRemove')}>Remove</button>
+			{#if quantityTicker}
+				<QuanityTicker {quantity} on:add={addQuantity} on:remove={removeQuantity} />
+			{/if}
+			{#if removeAction}
+				<button on:click={() => dispatch('handleRemove')}>Remove</button>
+			{/if}
 		</div>
 	</div>
 </div>

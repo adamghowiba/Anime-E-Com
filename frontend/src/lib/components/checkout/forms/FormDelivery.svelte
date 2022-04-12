@@ -89,7 +89,7 @@ import { onMount } from 'svelte';
 		</span>
 	</div>
 
-	<SquareButton width="100%" outlined disabled={!formComplete} on:click>Continue</SquareButton>
+	<SquareButton width="100%" outlined disabled={!formComplete} size="small" on:click>Continue</SquareButton>
 </form>
 
 <style lang="scss">

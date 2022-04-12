@@ -8,16 +8,18 @@
 	import { gsap } from 'gsap';
 	import ContentCta from '$lib/components/home/ContentCTA.svelte';
 
+	let invertElement: HTMLElement;
 </script>
 
 <Hero
 	title="Find your impossible"
 	subtitle="You don't have to tell us what's possible.
 
-	We are well aware."
+We are well aware."
 	button={{ link: '', text: 'shop' }}
 	imgSrc="/images/atsuko_people.jpg"
 />
+<div class="invert" bind:this={invertElement} />
 
 <FeaturedProducts title="New releases" subtitle="mens" button={{ link: '/', name: 'View All' }}>
 	<ProductCard
@@ -114,6 +116,11 @@
 	/>
 </section>
 
+<ContentCta>
+	OUR PIECES ARE DESIGNED TO CONTOUR AND ENHANCE EVERY CURVE ON EVERY SIZE AND SHAPE OF WOMAN WHILST
+	BEING STYLISH AND COMFORTABLE
+</ContentCta>
+
 <section class="hero-section">
 	<Hero
 		title="MINIMAL ANIME STYLE"
@@ -124,11 +131,6 @@
 		height={60}
 	/>
 </section>
-
-<ContentCta>
-	OUR PIECES ARE DESIGNED TO CONTOUR AND ENHANCE EVERY CURVE ON EVERY SIZE AND SHAPE OF WOMAN WHILST
-	BEING STYLISH AND COMFORTABLE
-</ContentCta>
 
 <!-- <div class="filler"></div> -->
 <style lang="scss">

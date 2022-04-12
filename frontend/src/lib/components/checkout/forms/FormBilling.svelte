@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Checkbox from '$lib/components/inputs/Checkbox.svelte';
 	import type { Address } from '$lib/types/checkout';
 	import SquareButton from '../../buttons/SquareButton.svelte';
 	import TextInput from '../../inputs/TextInput.svelte';
@@ -9,7 +10,7 @@
 
 <div class="form-group">
 	<div class="matches">
-		<input type="checkbox" name="" id="" bind:checked={billingSameAsShipping} />
+		<Checkbox name="billing_match" bind:checked={billingSameAsShipping} />
 		<span>Billing matches shipping address </span>
 	</div>
 
@@ -34,7 +35,7 @@
 		</div>
 	{/if}
 
-	<SquareButton width="100%" outlined on:click>Continue</SquareButton>
+	<SquareButton width="100%" outlined on:click size="small">Continue</SquareButton>
 </div>
 
 <style lang="scss">
@@ -42,5 +43,13 @@
 		font-size: 18px;
 		color: black;
 		font-weight: var(--fw-medium);
+	}
+	.matches {
+		display: flex;
+		align-items: center;
+		gap: 7px;
+	}
+	.form-group {
+		gap: 2rem;
 	}
 </style>

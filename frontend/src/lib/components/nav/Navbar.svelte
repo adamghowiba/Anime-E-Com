@@ -7,6 +7,7 @@
 	import DropdownGroup from './DropdownGroup.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { cartCount } from '$lib/stores/cart-store';
+	import { beforeNavigate } from '$app/navigation';
 
 	export let minimized: boolean = false;
 
@@ -18,12 +19,14 @@
 
 	const dispatch = createEventDispatcher();
 
-	const linkWrapMouseEnter = (event: MouseEvent) => {};
-
-	const linkWrapMouseLeave = (event: MouseEvent) => {
+	function closeNavbar() {
 		activeNavLink = null;
 		dropdown = false;
 		$navOverlay = false;
+	}
+
+	const linkWrapMouseLeave = (event: MouseEvent) => {
+		closeNavbar();
 	};
 
 	const linkMouseEnter = (event: MouseEvent) => {
@@ -35,6 +38,10 @@
 		$navOverlay = true;
 		dropdown = true;
 	};
+
+	beforeNavigate(() => {
+		closeNavbar();
+	});
 </script>
 
 <div class="nav__wrapper" class:minimized>
@@ -44,7 +51,7 @@
 			<img class="nav__logo" src="/images/logo.png" alt="Logo" />
 		</a>
 
-		<div class="nav__links" on:mouseenter={linkWrapMouseEnter} on:mouseleave={linkWrapMouseLeave}>
+		<div class="nav__links" on:mouseleave={linkWrapMouseLeave}>
 			{#each NAV_LINKS as link}
 				<a
 					href="/{link}"

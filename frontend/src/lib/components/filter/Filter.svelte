@@ -3,20 +3,11 @@
 	import FilterGroup from './FilterGroup.svelte';
 	import FilterOption from './FilterOption.svelte';
 
-	// export let filters = {
-	// 	brand: [],
-	// 	size: [],
-	// 	color: [],
-	// 	type: []
-	// };
-
 	export let filters: string[] = [];
 
 	function removeFilter(filter: string) {
 		filters = filters.filter((filterItem) => filterItem !== filter);
 	}
-
-	$: console.log(filters);
 </script>
 
 <div class="filter">
@@ -58,18 +49,18 @@
 	.filter {
 		max-width: 278px;
 		width: 100%;
-		border: 1px solid var(--color-gray-s1);
+		// border: 1px solid var(--color-gray-s1);
 		height: auto;
 
 		&__header {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			padding: 1rem;
+			padding: 1rem 0;
 		}
 
 		&__filters {
-			padding: 12px 1rem 0px 1rem;
+			padding: 12px 1rem 0px 0px;
 			flex-wrap: wrap;
 			display: flex;
 			gap: 10px;

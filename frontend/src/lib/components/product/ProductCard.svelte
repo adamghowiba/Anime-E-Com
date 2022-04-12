@@ -1,11 +1,7 @@
 <script lang="ts">
-	import { afterNavigate, beforeNavigate } from '$app/navigation';
-
 	import { alerts } from '$lib/stores/alerts';
-	import { navbarLoading } from '$lib/stores/interface';
 	import { savedItems } from '$lib/stores/wishlist';
 	import { slugify } from '$lib/utils/stringUtils';
-	import Alert from '../global/Alert.svelte';
 	import QuickviewPopup from '../popup/QuickviewPopup.svelte';
 	import HeartAction from './HeartAction.svelte';
 
@@ -32,7 +28,6 @@
 		savedItems.removeItem(productId);
 		alerts.addAlert('Removed item from wishlist', 'success');
 	};
-
 </script>
 
 {#if quickviewPopup}
@@ -50,10 +45,10 @@
 	<a href="/product/{slugify(title)}?id={productId}" class="card__image-wrap">
 		<img class="card__image" src={thumbnail || '/images/no_image.png'} alt="" />
 
-		<div class="actions">
+		<!-- <div class="actions">
 			<div class="actions__button">Save</div>
 			<div class="actions__button" on:click={() => (quickviewPopup = true)}>Quickview</div>
-		</div>
+		</div> -->
 	</a>
 
 	<div class="card__header">
@@ -73,6 +68,7 @@
 			<span>{features.join(' | ')}</span>
 		</div>
 	{/if}
+
 </div>
 
 <style lang="scss">
@@ -95,6 +91,9 @@
 			// background-color: rgba(255, 179, 93, 0.445);
 			font-weight: var(--fw-semibold);
 			backdrop-filter: blur(20px);
+
+			/* TODO Make sure nothing testing for CSS vars is here */
+			color: var(--)
 		}
 	}
 	.card {
