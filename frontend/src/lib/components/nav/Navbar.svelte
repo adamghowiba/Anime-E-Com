@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Topbar from './Topbar.svelte';
 	import Icon from '@iconify/svelte';
-	import { navOverlay } from '$lib/stores/interface';
+	import { navbarLoading, navOverlay } from '$lib/stores/interface';
 	import NavDropdown from './NavDropdown.svelte';
 	import { fade } from 'svelte/transition';
 	import DropdownGroup from './DropdownGroup.svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { cartItems } from '$lib/stores/cart';
+	import { cartCount } from '$lib/stores/cart-store';
+	import { beforeNavigate } from '$app/navigation';
 
 	export let minimized: boolean = false;
 
@@ -18,12 +19,14 @@
 
 	const dispatch = createEventDispatcher();
 
-	const linkWrapMouseEnter = (event: MouseEvent) => {};
-
-	const linkWrapMouseLeave = (event: MouseEvent) => {
+	function closeNavbar() {
 		activeNavLink = null;
 		dropdown = false;
 		$navOverlay = false;
+	}
+
+	const linkWrapMouseLeave = (event: MouseEvent) => {
+		closeNavbar();
 	};
 
 	const linkMouseEnter = (event: MouseEvent) => {
@@ -35,6 +38,10 @@
 		$navOverlay = true;
 		dropdown = true;
 	};
+
+	beforeNavigate(() => {
+		closeNavbar();
+	});
 </script>
 
 <div class="nav__wrapper" class:minimized>
@@ -44,7 +51,7 @@
 			<img class="nav__logo" src="/images/logo.png" alt="Logo" />
 		</a>
 
-		<div class="nav__links" on:mouseenter={linkWrapMouseEnter} on:mouseleave={linkWrapMouseLeave}>
+		<div class="nav__links" on:mouseleave={linkWrapMouseLeave}>
 			{#each NAV_LINKS as link}
 				<a
 					href="/{link}"
@@ -65,28 +72,21 @@
 					{#if activeNavLink == 'shop'}
 						<NavDropdown>
 							<DropdownGroup title="Trending">
-								<a href="/">New Releases</a>
-								<a href="/">Best Sellers</a>
-								<a href="/">All products</a>
-								<a href="/">Joggers</a>
-								<a href="/">Leggings</a>
-								<a href="/">Crop Tops</a>
+								<a href="/collections/all-products">All products</a>
+								<a href="/collections/new-releases">New Releases</a>
+								<a href="/collections/best-sellers">Best Sellers</a>
 							</DropdownGroup>
 
-							<DropdownGroup title="Activity">
-								<a href="/">Functional FItnesse</a>
-								<a href="/">Lifting</a>
-								<a href="/">Rest day</a>
-								<a href="/">Running</a>
+							<DropdownGroup title="Products">
+								<a href="/collections/t-shirts">T-Shirts</a>
+								<a href="/collections/hoodies">Hoodies</a>
 							</DropdownGroup>
 
 							<DropdownGroup title="Collections">
-								<a href="/">Flex</a>
-								<a href="/">Adapt</a>
-								<a href="/">Energy</a>
-								<a href="/">Essentials</a>
-								<a href="/">Seamless</a>
-								<a href="/">Vital</a>
+								<a href="/">Attack On Titan</a>
+								<a href="/">Demon Slayer</a>
+								<a href="/">Naurto</a>
+								<a href="/">Death Note</a>
 							</DropdownGroup>
 						</NavDropdown>
 					{:else if activeNavLink == 'series'}
@@ -109,13 +109,19 @@
 				<Icon icon="clarity:avatar-line" width={iconSize} height={iconSize} />
 			</a>
 			<div class="nav__cart" on:click={() => dispatch('clickCart')}>
-				<div class="nav__cart__total" class:large={$cartItems.length >= 100}>
-					{$cartItems?.length || 0}
+				<div class="nav__cart__total" class:large={$cartCount >= 100}>
+					{$cartCount || 0}
 				</div>
 				<Icon icon="ant-design:shopping-outlined" width={iconSize} height={iconSize} />
 			</div>
 		</div>
 	</nav>
+
+	<div class="loader">
+		{#if $navbarLoading}
+			<div class="loader__progress" />
+		{/if}
+	</div>
 </div>
 
 <style lang="scss">
@@ -124,12 +130,43 @@
 		top: 0;
 		width: 100%;
 		z-index: 100;
-		transition: transform 0.25s linear;
+		transition: transform 0.25s linear, box-shadow 0.15s linear;
 		transform: translateY(0);
-		// opacity: 0.1;
 
 		&.minimized {
 			transform: translateY(-35px);
+			box-shadow: 1px 0px 15px rgba(102, 102, 102, 0.281);
+		}
+	}
+	.loader {
+		position: absolute;
+		bottom: -1px;
+		width: 100%;
+		height: 1px;
+		background-color: var(--color-gray-s1);
+		z-index: 100;
+		pointer-events: none;
+
+		&__progress {
+			height: 100%;
+			width: 100%;
+			// background-color: var(--color-blue);
+			background: rgb(0, 125, 181);
+			background: linear-gradient(
+				90deg,
+				rgba(0, 125, 181, 0.5494572829131652) 0%,
+				rgba(0, 125, 181, 0.9136029411764706) 50%,
+				rgba(0, 125, 181, 0.5466561624649859) 100%
+			);
+			animation: load 1.9s linear infinite;
+		}
+	}
+	@keyframes load {
+		from {
+			transform: translateX(-100%);
+		}
+		to {
+			transform: translateX(100%);
 		}
 	}
 	.nav {
@@ -142,7 +179,7 @@
 		padding: 0 2rem;
 		min-height: 70px;
 		grid-template-columns: 1fr auto 1fr;
-		border-bottom: 1px solid var(--color-gray-s1);
+		// border-bottom: 1px solid var(--color-gray-s1);
 		z-index: 100;
 
 		&__logo {

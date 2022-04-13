@@ -1,0 +1,5 @@
+{
+  "cssvar.files": ["./frontend/static/root.css"],
+  "html-css-class-completion.includeGlobPattern": "**/global.css"
+  // "svelte.plugin.css.globals": "frontend/static/root.css"
+}

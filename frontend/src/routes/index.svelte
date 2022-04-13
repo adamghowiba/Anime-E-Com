@@ -3,40 +3,23 @@
 	import Hero from '$lib/components/home/Hero.svelte';
 	import Navbar from '$lib/components/nav/Navbar.svelte';
 	import FeaturedProducts from '$lib/components/product/FeaturedProducts.svelte';
-	import CategoryTile from '$lib/components/product/CategoryTile.svelte';
+	import CategoryTile from '$lib/components/home/CategoryTile.svelte';
 	import { onMount } from 'svelte';
 	import { gsap } from 'gsap';
 	import ContentCta from '$lib/components/home/ContentCTA.svelte';
 
-	onMount(async () => {
-		// const ScrollTrigger = await import('gsap/ScrollTrigger');
-		// gsap.registerPlugin(ScrollTrigger.ScrollTrigger);
-		// gsap.from(['body', 'nav', '.topbar'], {
-		// 	backgroundColor: '#323232',
-		// 	color: 'white',
-		// 	scrollTrigger: {
-		// 		trigger: 'body',
-		// 		start: 'top+=300px',
-		// 		end: 'top+=310px',
-		// 		markers: true,
-		// 		scrub: 1
-		// 	}
-		// });
-	});
-
-	let title: string;
-
-	$: console.log(title);
+	let invertElement: HTMLElement;
 </script>
 
 <Hero
 	title="Find your impossible"
 	subtitle="You don't have to tell us what's possible.
 
-	We are well aware."
+We are well aware."
 	button={{ link: '', text: 'shop' }}
 	imgSrc="/images/atsuko_people.jpg"
 />
+<div class="invert" bind:this={invertElement} />
 
 <FeaturedProducts title="New releases" subtitle="mens" button={{ link: '/', name: 'View All' }}>
 	<ProductCard
@@ -44,6 +27,7 @@
 		price={42}
 		title="Anti-Magic Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -51,6 +35,7 @@
 		price={42}
 		title="All Alone Tee"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -58,6 +43,7 @@
 		price={42}
 		title="Do You Jest Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -65,6 +51,7 @@
 		price={42}
 		title="Tokyo City Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 </FeaturedProducts>
@@ -97,13 +84,15 @@
 		price={42}
 		title="Anti-Magic Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
-	/>
-	<ProductCard
+		/>
+		<ProductCard
 		thumbnail="/images/products/lone_wolf.jpg"
 		price={42}
 		title="All Alone Tee"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -111,6 +100,7 @@
 		price={42}
 		title="Do You Jest Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -118,6 +108,7 @@
 		price={42}
 		title="Tokyo City Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 </FeaturedProducts>
@@ -133,6 +124,11 @@
 	/>
 </section>
 
+<ContentCta>
+	OUR PIECES ARE DESIGNED TO CONTOUR AND ENHANCE EVERY CURVE ON EVERY SIZE AND SHAPE OF WOMAN WHILST
+	BEING STYLISH AND COMFORTABLE
+</ContentCta>
+
 <section class="hero-section">
 	<Hero
 		title="MINIMAL ANIME STYLE"
@@ -143,11 +139,6 @@
 		height={60}
 	/>
 </section>
-
-<ContentCta>
-	OUR PIECES ARE DESIGNED TO CONTOUR AND ENHANCE EVERY CURVE ON EVERY SIZE AND SHAPE OF WOMAN WHILST
-	BEING STYLISH AND COMFORTABLE
-</ContentCta>
 
 <!-- <div class="filler"></div> -->
 <style lang="scss">

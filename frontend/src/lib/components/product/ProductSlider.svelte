@@ -27,10 +27,28 @@
 	$: if (images) {
 		sliderIndex = 0;
 	}
+
+	function imagesLoading() {
+		console.log('Loading image');
+	}
+
+	function imagesLoaded() {
+		console.log('Image Loaded');
+	}
 </script>
 
 <div class="slider">
-	<img src={images[sliderIndex]} alt="" />
+	<div class="slider__images">
+		{#each images as imageSrc, i}
+			<img
+				loading="{i === 0 ? 'eager' : 'lazy'}"
+				on:load={imagesLoaded}
+				src={imageSrc}
+				alt=""
+				style:z-index={sliderIndex === i ? '10' : '0'}
+			/>
+		{/each}
+	</div>
 
 	<div class="slider__action slider__action-next" on:click={nextSlide}>
 		<Icon icon="ic:round-navigate-next" width={30} height={30} />
@@ -56,6 +74,7 @@
 		bottom: 1rem;
 		left: 50%;
 		transform: translateX(-50%);
+		z-index: 20;
 
 		&__option-wrap {
 			height: 25px;
@@ -83,8 +102,12 @@
 	}
 	.slider {
 		position: relative;
-		max-height: 700px;
+		max-height: 780px;
 		// height: 1200px;
+
+		&__images {
+			height: 780px;
+		}
 
 		&__action {
 			width: 50px;
@@ -97,6 +120,7 @@
 			position: absolute;
 			top: 50%;
 			transform: translateY(-50%);
+			z-index: 20;
 		}
 
 		&__action-next {
@@ -108,6 +132,7 @@
 		}
 
 		img {
+			position: absolute;
 			width: 100%;
 			height: 100%;
 			object-fit: cover;

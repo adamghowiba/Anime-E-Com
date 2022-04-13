@@ -6,10 +6,11 @@
 *::after {
 	box-sizing: border-box;
 }
-
-body {
-	width: 100%;
+html, body {
 	height: 100%;
+	width: 100%;
+}
+body {
 	font-weight: var(--fw-regular);
 	font-family: 'Montserrat', sans-serif;
 	/* font-family: 'Josefin Sans', sans-serif; */
@@ -52,6 +53,7 @@ h3 {
 	font-weight: var(--fw-semibold);
 }
 
+/* Overlay */
 .overlay {
 	background-color: rgba(0, 0, 0, 0.493);
 	width: 100%;
@@ -63,6 +65,7 @@ h3 {
 	background: linear-gradient(90deg, rgba(0, 0, 0, 0.795) 0%, rgba(255, 255, 255, 0.13) 100%);
 }
 
+/* Containers */
 .container {
 	width: 100%;
 	display: block;
@@ -86,4 +89,20 @@ h3 {
 
 .container--sm {
 	max-width: 900px;
+}
+
+/* Form Group */
+.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 4rem;
+}
+.form-group__subgroup {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.text-terms {
+	font-size: 12px;
+	color: #969696;
 }

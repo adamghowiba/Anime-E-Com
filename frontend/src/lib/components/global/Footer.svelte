@@ -12,7 +12,7 @@
 			omnis distinctio
 		</p>
 
-		<div class="details__contact-block">
+		<!-- <div class="details__contact-block">
 			<div class="details__contact-item">
 				<div class="details__contact-icon">
 					<Icon icon="eva:pin-fill" color="black" width={iconSize} height={iconSize} />
@@ -31,69 +31,100 @@
 				</div>
 				<span>ahmad@fayroozfarm.com</span>
 			</div>
+		</div> -->
+	</div>
+
+	<div class="blocks">
+		<div class="blocks__item">
+			<h5>Shopping Services</h5>
+			<a href="/">Schedule Consultation</a>
+			<a href="/">Showrooms</a>
+			<a href="/">Trade Program</a>
+			<a href="/">Outlet</a>
+		</div>
+		<div class="blocks__item">
+			<h5>About</h5>
+			<a href="/">Our Story</a>
+			<a href="/">Reviews</a>
+			<a href="/">Carrers</a>
+			<a href="/">Our blog</a>
+		</div>
+		<div class="blocks__item">
+			<h5>Resources</h5>
+			<a href="/">Look Up Order Status</a>
+			<a href="/">Returns</a>
+			<a href="/">Shipping & Delivery</a>
+			<a href="/">FAQ</a>
 		</div>
 	</div>
 
-	<div class="footer__block">
-		<h5>Shopping Services</h5>
-		<a href="/">Schedule Consultation</a>
-		<a href="/">Showrooms</a>
-		<a href="/">Trade Program</a>
-		<a href="/">Outlet</a>
-	</div>
-	<div class="footer__block">
-		<h5>About</h5>
-		<a href="/">Our Story</a>
-		<a href="/">Reviews</a>
-		<a href="/">Carrers</a>
-		<a href="/">Our blog</a>
-	</div>
-	<div class="footer__block">
-		<h5>Resources</h5>
-		<a href="/">Look Up Order Status</a>
-		<a href="/">Returns</a>
-		<a href="/">Shipping & Delivery</a>
-		<a href="/">FAQ</a>
-	</div>
-
 	<div class="bottom">
-		<div class="bottom__divider" />
+		<!-- <div class="bottom__divider" /> -->
 		<div class="bottom__content">
-			<span class="bottom__legal">All Rights Reserved | Copyright © Al Fayrooz</span>
+			<span class="bottom__legal">All Rights Reserved | Copyright © Web Revived</span>
 			<span class="bottom__credits"
-				>Designed by <a href="http://webrevived.com" target="_blank">Web Revived</a> | Custom Built With Svelte</span
+				>Designed by <a href="http://webrevived.com" target="_blank">Web Revived</a> | Custom Built With
+				Svelte</span
 			>
 		</div>
 	</div>
 </footer>
 
 <style lang="scss">
-	a, span, p {
-		font-size: 14px;
+	a,
+	span,
+	p {
+		font-size: 13px;
+		color: rgb(211, 208, 208);
 	}
 	.footer {
+		background-color: black;
+		color: white;
 		display: grid;
-        border-top: 1px solid #E7E7E7;
-		grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr;
+		border-top: 1px solid #e7e7e7;
+		grid-template-columns: 1fr 1.5fr;
 		grid-template-rows: 1fr auto;
 		grid-template-areas:
-			'details block block block'
-			'bottom bottom bottom bottom';
+			'details blocks'
+			'bottom bottom';
 		justify-items: center;
 		// justify-content: space-between;
-		column-gap: 1rem;
-		row-gap: 2rem;
+		column-gap: 2rem;
+		row-gap: 4rem;
 		padding: 2.5rem;
+		padding-top: 4rem;
 		padding-bottom: 1rem;
+		position: relative;
 
-		&__block {
+		h5,
+		h4 {
+			color: White;
+		}
+
+		h5 {
+			font-size: 12px;
+			text-transform: uppercase;
+			font-weight: var(--fw-semibold);
+		}
+		
+		h4 {
+			font-size: 16px;
+			margin-bottom: 10px;
+			font-weight: var(--fw-semibold);
+		}
+	}
+
+	.blocks {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		width: 100%;
+		grid-area: blocks;
+
+		&__item {
 			display: flex;
 			flex-direction: column;
 			gap: 1rem;
-		}
-
-		&__block h5 {
-			font-weight: var(--fw-medium);
 		}
 	}
 
@@ -107,13 +138,17 @@
 		&__divider {
 			width: 100%;
 			height: 1px;
-			background-color: #E7E7E7;
+			background-color: #e7e7e7;
 		}
 
 		&__content {
 			display: flex;
 			justify-content: space-between;
-			font-size: var(--text-sm);
+		}
+
+		a,
+		span {
+			font-size: 12px;
 		}
 
 		a {
@@ -128,13 +163,9 @@
 		margin-right: auto;
 		// gap: 1rem;
 
-		h4 {
-			margin-bottom: 4px;
-		}
-
 		p {
-			max-width: 40ch;
-			line-height: 1.4;
+			max-width: 35ch;
+			line-height: 1.6;
 			margin-bottom: 1rem;
 		}
 

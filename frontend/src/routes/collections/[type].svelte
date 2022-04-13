@@ -1,82 +1,135 @@
 <script context="module" lang="ts">
+	import { getProductsByType } from '$lib/commerce/collectionUtils';
 	import { commerce } from '$lib/commerce/commerce';
-	import type { ProductCollection } from '@chec/commerce.js/features/products';
+	import CollectionHeader from '$lib/components/collection/CollectionHeader.svelte';
+	import Filter from '$lib/components/filter/Filter.svelte';
+	import ProductCard from '$lib/components/product/ProductCard.svelte';
+	import ProductCardSkeleton from '$lib/components/skeleton/ProductCardSkeleton.svelte';
+	import { categoriesStore } from '$lib/stores/categories-store';
+	import { collectionStore } from '$lib/stores/collection-store';
+	import { savedItems } from '$lib/stores/wishlist';
+	import type { Category } from '@chec/commerce.js/types/category';
 	import type { Product } from '@chec/commerce.js/types/product';
 	import type { Load } from '@sveltejs/kit';
+	import { children } from 'svelte/internal';
 
 	export const load: Load = async ({ params }) => {
 		const type: string = params.type;
-		const categories = await commerce.categories.list();
-		const products = await commerce.products.list({ category_slug: [type] });
 
 		return {
 			props: {
-				categories,
-				products: products.data,
 				type
 			}
 		};
 	};
-
-	namespace Product {
-		interface ProductItem  {
-			itemMeta: string[];
-		}
-	}
 </script>
 
 <script lang="ts">
-	import Filter from '$lib/components/filter/Filter.svelte';
-	import Button from '$lib/components/global/Button.svelte';
-	import ProductHeader from '$lib/components/global/ProductHeader.svelte';
-	import ProductCard from '$lib/components/product/ProductCard.svelte';
-	import { savedItems } from '$lib/stores/wishlist';
-
-	export let products: Product[];
 	export let type: string;
 
-	let filters: string[] = [];
-	
-	products = products.map((prod) => {
-		prod['itemMeta'] = [
-			...prod.categories.flatMap((cat) => cat.slug),
-			...prod.variant_groups.flatMap((vari) =>
-				vari.options.flatMap((option) => option.name.toLowerCase())
-			)
-		];
-		return prod;
-	});
+	let products: Product[];
+	let selectedFilters: string[] = [];
+	let filterOptions: Category[];
 
-	$: filteredProducts =
-		filters.length >= 1
-			? products.filter((prod) => {
-					return filters.some((filter) => {
-						return (prod['itemMeta'] as string[]).includes(filter);
-					});
-			  })
-			: products;
+	/* Get products from the svelte store than update with response.
+	   Allows for quicker loading when navigating from collection-collection
+	*/
+	async function getProductsFromStore(collectionType: string) {
+		if ($collectionStore[collectionType]) {
+			products = $collectionStore[collectionType];
+			await sanitizeCollectionFilters();
+			return;
+		}
 
-	$: console.log(products);
-	$: console.log('FIltered products', filteredProducts);
+		const productData = await getProductsByType(type);
+		console.log(productData);
+
+		/* Make sure store doesn't get while navigating during loading. */
+		if (collectionType !== type) return;
+
+		products = productData;
+		collectionStore.setProductsForType(type, productData);
+		await sanitizeCollectionFilters();
+	}
+
+	function getFilteredProducts(filters: string[]) {
+		if (!products || filters.length <= 0) return;
+
+		const filteredproducts = products.filter((product) => {
+			return (
+				product.categories.some((cat) => filters.includes(cat.slug)) ||
+				product.variant_groups.some((group) =>
+					group.options.some((option) => filters.includes(option.name))
+				)
+			);
+		});
+
+		return filteredproducts;
+	}
+
+	async function getLocalCategories() {
+		if ($categoriesStore) return $categoriesStore;
+
+		const categories = await commerce.categories.list();
+		$categoriesStore = categories.data;
+
+		return categories.data;
+	}
+
+	/* Return a set of the categories that are in the collection. */
+	function getCategoriesPresent(products: Product[]) {
+		const presentCatOptions = new Set<string>();
+
+		products.forEach((product) => {
+			product.categories.forEach((cat) => presentCatOptions.add(cat.slug));
+		});
+
+		return presentCatOptions;
+	}
+
+	/* Return the categories & their childern that are in the collection */
+	async function sanitizeCollectionFilters() {
+		const categories = await getLocalCategories();
+		let categoryOptionsPresent = getCategoriesPresent(products);
+
+		const collectionFilters = categories.map((val) => {
+			return {
+				...val,
+				children: val.children.filter((cat) => categoryOptionsPresent.has(cat.slug))
+			};
+		});
+
+		filterOptions = collectionFilters;
+	}
+
+	$: getProductsFromStore(type);
+	$: filteredProducts = getFilteredProducts(selectedFilters) || products;
 </script>
 
-<ProductHeader subtitle="Mens" title={type} />
+<CollectionHeader subtitle="Mens" title={type} />
 
 <section class="container container--lg">
 	<div class="filter">
-		<Filter bind:filters />
+		<Filter bind:selectedFilters {filterOptions} />
 	</div>
 
 	<div class="products">
-		{#each filteredProducts || products as item}
-			<ProductCard
-				thumbnail={item?.image?.url}
-				price={parseInt(item.price.raw.toString())}
-				title={item.name}
-				productId={item.id}
-				saved={Boolean($savedItems.find((items) => items.productId === item.id))}
-			/>
-		{/each}
+		{#if products}
+			{#each filteredProducts || products as item}
+				<ProductCard
+					thumbnail={item?.image?.url}
+					price={parseInt(item.price.raw.toString())}
+					title={item.name}
+					productId={item.id}
+					saved={Boolean($savedItems.find((items) => items.productId === item.id))}
+					permaLink={item.permalink}
+				/>
+			{/each}
+		{:else}
+			{#each Array(6) as _}
+				<ProductCardSkeleton />
+			{/each}
+		{/if}
 	</div>
 </section>
 

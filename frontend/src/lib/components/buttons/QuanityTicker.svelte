@@ -23,9 +23,9 @@
 
 <style lang="scss">
 	.quantity {
-		height: 40px;
+		height: 30px;
 		min-width: 90px;
-		border: 1px solid var(--color-gray-s1);
+		// border: 1px solid var(--color-gray-s1);
 		margin-right: auto;
 		display: flex;
 		gap: 7px;

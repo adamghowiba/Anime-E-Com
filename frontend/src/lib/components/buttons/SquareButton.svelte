@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	type ButtonColor = 'white' | 'black' | 'gray';
+	type ButtonColor = 'white' | 'black' | 'gray' | "blue";
 	type ButtonSize = 'small' | 'base' | 'large';
 	type JustifyContent = 'center' | 'space-between';
 
@@ -11,7 +11,7 @@
 	export let disabled: boolean = false;
 
 	/* Style Options */
-	export let buttonColor: ButtonColor = 'white';
+	export let buttonColor: ButtonColor = 'black';
 	export let width: string = 'max-content';
 	export let margin: string = 'none';
 	export let size: ButtonSize = 'base';
@@ -25,7 +25,18 @@
 	style="--width: {width}; --margin: {margin}; --justify: {justify}"
 >
 	{#if href}
-		<a class:outlined {href} class:hover class:disabled><slot /></a>
+		<a class:outlined {href} class:hover class:disabled>
+			<slot />
+			{#if icon}
+				<Icon
+					{icon}
+					rotate={icon === 'bi:arrow-down' ? '270deg' : 0}
+					color="inherit"
+					width={18}
+					height={18}
+				/>
+			{/if}</a
+		>
 	{:else}
 		<button class:outlined class:hover class:disabled {disabled} on:click>
 			<slot />
@@ -59,6 +70,7 @@
 		gap: 14px;
 		background-color: white;
 		padding: 15px 25px;
+		font-size: 13.9px;
 		font-weight: var(--fw-black);
 		text-transform: uppercase;
 		align-items: center;
@@ -129,6 +141,30 @@
 		&.outlined:hover::before {
 			transform: translate(0, 0);
 			border-color: black;
+		}
+	}
+
+	.gray button,
+	.gray a {
+		background-color: #53565a;
+		border: 1px solid #53565a;
+		color: white;
+
+		&.hover:hover {
+			background-color: white;
+			color: black;
+		}
+	}
+
+	.blue button,
+	.blue a {
+		background-color: #007DB5;
+		border: 1px solid #007DB5;
+		color: white;
+
+		&.hover:hover {
+			background-color: white;
+			color: #007DB5;
 		}
 	}
 

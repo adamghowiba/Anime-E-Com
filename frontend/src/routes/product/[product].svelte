@@ -1,43 +1,31 @@
 <script lang="ts" context="module">
-	import {
-		commerce,
-		isValidProduct,
-		parseProductColors,
-		parseProductSizes
-	} from '$lib/commerce/commerce';
+	import { addItemToCart } from '$lib/commerce/cartUtils';
+	import { commerce, isValidProduct } from '$lib/commerce/commerce';
 	import ToggleList from '$lib/components/account/ToggleList.svelte';
 	import Breadcrumbs from '$lib/components/global/Breadcrumbs.svelte';
-	import SquareButton from '$lib/components/global/SquareButton.svelte';
+	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 	import RadioGroup from '$lib/components/inputs/RadioGroup.svelte';
 	import RadioInput from '$lib/components/inputs/RadioInput.svelte';
 	import ProductSlider from '$lib/components/product/ProductSlider.svelte';
-	import { alerts } from '$lib/stores/alerts';
-	import { cartItems } from '$lib/stores/cart';
-	import { navbarMinimzed } from '$lib/stores/interface';
-	import { savedItems } from '$lib/stores/wishlist';
-	import type { SelectedVariant, VariantGroup, VariantOption } from '$lib/types/interface';
-	import { generateProductId } from '$lib/utils/numberUtils';
-	import { unslugify } from '$lib/utils/stringUtils';
+	import { navbarLoading, navbarMinimzed } from '$lib/stores/interface';
+	import type { Asset } from '@chec/commerce.js/types/asset';
 	import type { Product } from '@chec/commerce.js/types/product';
+	import type { SelectedVariant } from '@chec/commerce.js/types/selected-variant';
 	import Icon from '@iconify/svelte';
 	import type { Load } from '@sveltejs/kit';
 
-	export const load: Load = async ({ props, params, url }) => {
-		const productId = url.searchParams.get('id');
-
-		const productSlug = params.product;
-		const productData = await commerce.products.retrieve(productId);
+	export const load: Load = async ({ params, url }) => {
+		const permaLink = params.product;
+		const productData = await commerce.products.retrieve(permaLink, { type: 'permalink' });
 
 		/* Fail if the product has no sizes */
-		if (!isValidProduct(productData)) return { error: new Error('Invalid Product- Incomplete') };
+		if (!isValidProduct(productData)) return { status: 400, error: new Error('Invalid Product- Incomplete') };
 
 		/* TODO Handle Error for not found product */
 		console.log(productData);
 
 		return {
 			props: {
-				productSlug,
-				productId,
 				productData
 			}
 		};
@@ -45,51 +33,21 @@
 </script>
 
 <script lang="ts">
-	export let productSlug: string;
-	export let productId: number;
+	import ProductOptions from '$lib/components/product-page/ProductOptions.svelte';
+	import { onMount } from 'svelte';
+
 	export let productData: Product;
 
-	/* TODO Check for mistakes made on the backend. */
-	// let sizeOptions = null;
-	// let colorOptions = null;
-
-	let sizeOptions = parseProductSizes(productData);
-	let colorOptions = parseProductColors(productData);
-
-	let productTitle = unslugify(productSlug);
-	let selectedColor = colorOptions ? colorOptions.options[0] : null;
-	let selectedSize: VariantOption;
+	let selectedVariants: { [group: string]: SelectedVariant & { assets: Asset[] } } = {};
 
 	function addToCart() {
-		const selectedVariant: SelectedVariant[] = [];
-
-		if (selectedColor)
-			selectedVariant.push({
-				groupId: colorOptions.id,
-				groupName: colorOptions.name,
-				optionId: selectedColor.id,
-				optionName: selectedColor.name
-			});
-
-		if (selectedSize)
-			selectedVariant.push({
-				groupId: sizeOptions.id,
-				groupName: sizeOptions.name,
-				optionId: selectedSize.id,
-				optionName: selectedSize.name
-			});
-
-		cartItems.addItem({
-			// id: generateProductId(productData.id, itemVariants),
-			id: 'adwawd',
-			productId: productData.id,
-			price: productData.price.raw,
-			quanity: 1,
-			thumbnail: selectedColorThumbnail,
-			title: productData.name,
-			selectedVariant
-		});
-		alerts.addAlert('Added item to cart', 'success');
+		addItemToCart(
+			productData.id,
+			Object.values(selectedVariants).reduce((acc, curr) => {
+				acc[curr.group_id] = curr.option_id;
+				return acc;
+			}, {})
+		);
 	}
 
 	/* 	function addToWishlist() {
@@ -101,10 +59,17 @@
 		});
 	} */
 
-	$: selectedColorThumbnail = selectedColor
-		? selectedColor.assets[0].url
-		: productData.assets[0].url;
-	console.log(colorOptions);
+	onMount(() => {
+		$navbarLoading = false;
+	});
+
+	$: selectedColorImages =
+		selectedVariants?.color?.assets?.length > 0
+			? [...selectedVariants.color.assets.map((asset) => asset.url)]
+			: [...productData.assets.map(({ url }) => url)];
+
+	/* TODO: Remove Console Logs */
+	console.log(productData);
 </script>
 
 <header class="container container--lg">
@@ -116,51 +81,14 @@
 	/>
 </header>
 
-<section class="product">
-	<ProductSlider
-		images={selectedColor
-			? [...selectedColor.assets.map((asset) => asset.url)]
-			: [...productData.assets.map(({ url }) => url)]}
-	/>
+<section class="product container container--lg">
+	<ProductSlider images={selectedColorImages} />
 
 	<div class="details" class:extraTopSpace={!$navbarMinimzed}>
 		<h3 class="details__title">{productData.name}</h3>
 		<h5 class="details__price">${productData.price.raw}</h5>
 
-		{#if colorOptions}
-			<div class="details__block">
-				<h6>Color <span class="gray">{selectedColor.name ?? ''}</span></h6>
-
-				<div class="details__block__color-options">
-					<RadioGroup bind:value={selectedColor}>
-						{#each colorOptions.options as color}
-							<RadioInput
-								name="size"
-								value={color}
-								height="100"
-								border={selectedColor.name === color.name}
-							>
-								<img src={color.assets[0].url} alt="" />
-							</RadioInput>
-						{/each}
-					</RadioGroup>
-				</div>
-			</div>
-		{/if}
-
-		{#if sizeOptions}
-			<div class="details__block">
-				<h6>Select Size</h6>
-
-				<div class="details__block__size-options">
-					<RadioGroup bind:value={selectedSize}>
-						{#each sizeOptions.options as size}
-							<RadioInput name="size" value={size}>{size.name.toUpperCase()}</RadioInput>
-						{/each}
-					</RadioGroup>
-				</div>
-			</div>
-		{/if}
+		<ProductOptions {productData} bind:selectedVariants />
 
 		<div class="details__actions">
 			<SquareButton
@@ -168,28 +96,29 @@
 				buttonColor="black"
 				justify="space-between"
 				width="100%"
-				disabled={sizeOptions ? !Boolean(selectedSize) : false}
+				disabled={Object.values(selectedVariants).length !== productData.variant_groups.length}
 				outlined
 			>
 				Add to cart
 			</SquareButton>
-			<!-- <div class="details__actions-save" on:click={addToWishlist}>
+
+			<div class="details__actions-save" on:click>
 				<Icon icon="ant-design:heart-outlined" width={20} height={20} color="black" />
-			</div> -->
+			</div>
 		</div>
-		<ToggleList title="Description" width="100%">
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam totam delectus vel
-				repellat obcaecati rem quisquam id, nam impedit eveniet, veniam quos natus excepturi
-				consectetur modi consequuntur cum accusantium dolore.
-			</p>
-		</ToggleList>
+
+		{#if productData.description}
+			<ToggleList title="Description" width="100%">
+				<p>
+					{@html productData.description}
+				</p>
+			</ToggleList>
+		{/if}
 
 		<ToggleList title="Delivery & Returns" width="100%">
 			<p>
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam totam delectus vel
-				repellat obcaecati rem quisquam id, nam impedit eveniet, veniam quos natus excepturi
-				consectetur modi consequuntur cum accusantium dolore.
+				Free Standard delivery over 50€, Free Express delivery over 100€. Rest of Europe: Please
+				refer to our delivery information .
 			</p>
 		</ToggleList>
 	</div>
@@ -205,22 +134,6 @@
 		display: grid;
 		grid-template-columns: 1fr 0.5fr;
 		padding-bottom: 5rem;
-	}
-
-	.details__block {
-		display: flex;
-		gap: 1rem;
-		flex-direction: column;
-
-		&__color-options {
-			display: flex;
-			gap: 7px;
-		}
-
-		h6 {
-			text-transform: uppercase;
-			font-weight: var(--fw-semibold);
-		}
 	}
 
 	.details {
@@ -272,10 +185,5 @@
 			background-color: var(--color-gray-s2);
 			cursor: pointer;
 		}
-	}
-
-	.gray {
-		color: #6e6e6e;
-		text-transform: capitalize;
 	}
 </style>

@@ -15,7 +15,8 @@
 		gap: 1rem;
 		text-align: center;
 		max-width: 70ch;
-		margin: 7rem auto;
+		height: 50vh;
+		margin: 0 auto;
 
 		h4 {
 			line-height: 1.4;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SquareButton from '../global/SquareButton.svelte';
+	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 	import { slide } from 'svelte/transition';
 
 	export let width: string = '100%';
@@ -45,6 +45,11 @@
 			margin: 0;
 			border: none;
 			border-top: 1px solid #d2d2d2;
+		}
+
+		:global(ul) {
+			margin: 0;
+			padding-left: 15px;
 		}
 	}
 </style>

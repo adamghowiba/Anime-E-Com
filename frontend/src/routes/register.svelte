@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/components/global/Button.svelte';
+	import Button from '$lib/components/buttons/Button.svelte';
 	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 

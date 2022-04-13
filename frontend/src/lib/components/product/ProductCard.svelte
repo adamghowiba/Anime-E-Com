@@ -2,22 +2,19 @@
 	import { alerts } from '$lib/stores/alerts';
 	import { savedItems } from '$lib/stores/wishlist';
 	import { slugify } from '$lib/utils/stringUtils';
-	import Alert from '../global/Alert.svelte';
 	import QuickviewPopup from '../popup/QuickviewPopup.svelte';
 	import HeartAction from './HeartAction.svelte';
 
 	export let thumbnail: string = '/images/no_image.png';
 	export let price: number;
 	export let title: string;
-	// export let id: number = 1;
 	export let productId: string = 'unset';
 	export let features: string[] = [];
 	export let newItem: boolean = false;
 	export let saved: boolean = false;
-	export let href: string = '/';
+	export let permaLink: string;
 
 	let quickviewPopup = false;
-
 	const addSavedProduct = () => {
 		if (!saved) {
 			savedItems.addItem({ price, thumbnail, title, productId });
@@ -43,13 +40,13 @@
 
 <div class="card">
 	<HeartAction on:click={() => addSavedProduct()} {saved} />
-	<a href="/product/{slugify(title)}?id={productId}" class="card__image-wrap">
+	<a href="/product/{permaLink}" class="card__image-wrap">
 		<img class="card__image" src={thumbnail || '/images/no_image.png'} alt="" />
 
-		<div class="actions">
+		<!-- <div class="actions">
 			<div class="actions__button">Save</div>
 			<div class="actions__button" on:click={() => (quickviewPopup = true)}>Quickview</div>
-		</div>
+		</div> -->
 	</a>
 
 	<div class="card__header">

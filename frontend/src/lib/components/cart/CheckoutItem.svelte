@@ -1,45 +1,32 @@
 <script lang="ts">
-	import { cartItems } from '$lib/stores/cart';
-	import { savedItems } from '$lib/stores/wishlist';
-	import { generateProductId } from '$lib/utils/numberUtils';
-	import Alert from '../global/Alert.svelte';
-	import QuanityTicker from '../global/QuanityTicker.svelte';
+	import { removeItemFromCart } from '$lib/commerce/cartUtils';
+	import { loadingScreen } from '$lib/stores/interface';
+	import type { SelectedVariant as SelectedOption } from '@chec/commerce.js/types/selected-variant';
+	import { createEventDispatcher } from 'svelte';
 
 	/* Todo combine CheckoutItem & CartItem  */
 	export let thumbnail: string;
 	export let title: string;
 	export let price: number;
-	export let variants: { [key: string]: unknown } = {};
-	export let id: string = null;
+	export let selectedOptions: SelectedOption[] = null;
+	export let lineItemId: string;
 	export let productId: string;
 	export let quantity: number;
 
 	/* Style Props */
 	export let imgSize: string = '120px';
 
-	function handleAddToCart() {
-		savedItems.removeItem(productId);
+	const dispatch = createEventDispatcher();
 
-		cartItems.addItem({
-			id: generateProductId(productId, variants),
-			productId,
-			price,
-			title,
-			thumbnail,
-			quanity: 1
-		});
+	async function removeFromCart() {
+		$loadingScreen = true;
+
+		const removedResponse = await removeItemFromCart(lineItemId);
+		dispatch('itemRemoved', removedResponse);
+		$loadingScreen = false;
 	}
 
-	function removeQuantity() {
-		if (quantity == 0) return;
-		cartItems.updateItem(id, { quanity: --quantity });
-	}
-
-	function addQuantity() {
-		cartItems.updateItem(id, { quanity: ++quantity });
-	}
-
-	$: items = cartItems;
+	function handleAddToWishlist() {}
 </script>
 
 <div class="item">
@@ -52,15 +39,20 @@
 		</div>
 
 		<div class="info__variants">
-			{#each Object.entries(variants) as [key, value]}
-				<span>{key}: {value}</span>
-			{/each}
+			{#if selectedOptions}
+				{#each selectedOptions as option}
+					<span>{option.group_name}: {option.option_name}</span>
+				{/each}
+			{/if}
+			<span>QTY: {quantity}</span>
 		</div>
 
 		<div class="info__actions">
-			<button on:click={() => items.removeItem(productId)}>Edit</button>
+			<button>Edit</button>
 			<span>|</span>
-			<button on:click={handleAddToCart}>Move To Wishlist</button>
+			<button on:click={handleAddToWishlist}>Move To Wishlist</button>
+			<span>|</span>
+			<button on:click={removeFromCart}>Remove</button>
 		</div>
 	</div>
 </div>

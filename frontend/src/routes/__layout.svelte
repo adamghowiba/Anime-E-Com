@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { browser } from '$app/env';
+	import { beforeNavigate } from '$app/navigation';
 	import Alert from '$lib/components/global/Alert.svelte';
-	import Drawers from '$lib/components/global/Drawers.svelte';
+	import Drawers from '$lib/components/cart/CartDrawer.svelte';
 	import Footer from '$lib/components/global/Footer.svelte';
+	import LoadingScreen from '$lib/components/global/LoadingScreen.svelte';
 	import Navbar from '$lib/components/nav/Navbar.svelte';
-	import { alertLocation,alerts } from '$lib/stores/alerts';
-	import { navOverlay,overlay, navbarMinimzed as navMinimzedStore } from '$lib/stores/interface';
+	import { alertLocation, alerts } from '$lib/stores/alerts';
+	import {
+		navOverlay,
+		overlay,
+		navbarMinimzed as navMinimzedStore,
+		loadingScreen
+	} from '$lib/stores/interface';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
@@ -14,7 +21,6 @@
 	let sectionWrapper: HTMLElement;
 
 	const drawers = {
-		wishlist: false,
 		cart: false
 	};
 
@@ -44,13 +50,19 @@
 		};
 	});
 
-	$: {
-		if (browser) {
-			document.body.style.overflow = `${$overlay || $navOverlay ? 'hidden' : 'auto'}`;
-		}
-	}
+	beforeNavigate(() => {
+		setDrawerExapnded(false, 'cart');
+	});
 
-	$: $overlay = drawers.cart || drawers.wishlist;
+	/* TIP: Hide scroll when overlay is open */
+	// $: {
+	// 	if (browser && $overlay) {
+	// 		document.body.style.overflow = `${$overlay ? 'hidden' : 'auto'}`;
+	// 	}
+	// }
+
+	/* TIP: Open overlay when drawer opens */
+	$: $overlay = drawers.cart;
 </script>
 
 {#if $overlay || $navOverlay}
@@ -58,23 +70,21 @@
 {/if}
 
 <!-- Main Section -->
+<Navbar
+	minimized={navbarMinimzed}
+	on:clickHeart
+	on:clickCart={() => setDrawerExapnded(true, 'cart')}
+/>
+
 <section bind:this={sectionWrapper}>
-	<Navbar
-		minimized={navbarMinimzed}
-		on:clickHeart={() => setDrawerExapnded(true, 'wishlist')}
-		on:clickCart={() => setDrawerExapnded(true, 'cart')}
-	/>
 	<slot />
 	<Footer />
 </section>
 
 <!-- Wishlist & Cart Drawers -->
-<Drawers
-	cartExpanded={drawers.cart}
-	wishlistExpanded={drawers.wishlist}
-	on:wishlistClosed={() => setDrawerExapnded(false, 'wishlist')}
-	on:cartClosed={() => setDrawerExapnded(false, 'cart')}
-/>
+{#if drawers.cart}
+	<Drawers on:cartClosed={() => setDrawerExapnded(false, 'cart')} />
+{/if}
 
 <!-- Popup Alerts -->
 {#if $alerts.length >= 1}
@@ -83,6 +93,11 @@
 			<Alert type={alert.type} message={alert.message} />
 		{/each}
 	</div>
+{/if}
+
+<!-- Loading Screen -->
+{#if $loadingScreen}
+	<LoadingScreen />
 {/if}
 
 <style lang="scss">
@@ -99,9 +114,13 @@
 			z-index: 10;
 		}
 	}
+	.content {
+		height: 100%;
+	}
 
 	section {
-		height: 100%;
+		height: auto;
+		min-height: 100%;
 		width: 100%;
 		padding-top: 106px;
 		transition: transform 0.25s ease-out;

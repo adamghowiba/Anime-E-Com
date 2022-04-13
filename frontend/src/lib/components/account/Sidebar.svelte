@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { slide } from 'svelte/transition';
-	import SquareButton from '../global/SquareButton.svelte';
+	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 
 	let helpDropdownExpanded: boolean = false;
 	let iconSize = 20;
