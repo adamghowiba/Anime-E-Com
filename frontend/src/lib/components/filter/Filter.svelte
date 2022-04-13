@@ -1,19 +1,23 @@
 <script lang="ts">
+	import { commerce } from '$lib/commerce/commerce';
+	import type { Category } from '@chec/commerce.js/types/category';
 	import Icon from '@iconify/svelte';
+	import Skeleton from '../skeleton/Skeleton.svelte';
 	import FilterGroup from './FilterGroup.svelte';
 	import FilterOption from './FilterOption.svelte';
 
-	export let filters: string[] = [];
+	export let selectedFilters: string[] = [];
+	export let filterOptions: Category[];
 
 	function removeFilter(filter: string) {
-		filters = filters.filter((filterItem) => filterItem !== filter);
+		selectedFilters = selectedFilters.filter((filterItem) => filterItem !== filter);
 	}
 </script>
 
 <div class="filter">
-	{#if filters.length >= 1}
+	{#if selectedFilters.length >= 1}
 		<div class="filter__filters">
-			{#each filters as filter}
+			{#each selectedFilters as filter}
 				<div class="filter__badge" on:click={() => removeFilter(filter)}>
 					<span>{filter} </span>
 					<Icon icon="ep:close-bold" />
@@ -24,25 +28,27 @@
 
 	<div class="filter__header">
 		<p>FILTER BY</p>
-		<span class="filter__clear" on:click={() => (filters = [])}>CLEAR ALL</span>
+		<span class="filter__clear" on:click={() => (selectedFilters = [])}>CLEAR ALL</span>
 	</div>
 
-	<FilterGroup name="brand" bind:value={filters} expanded>
-		<FilterOption name="Tokyo Ghoul" value="tokyo-ghoul" />
-		<FilterOption name="Attack On Titan" value="attack-on-titan" />
-		<!-- <FilterOption name="FIT" value="fit" /> -->
-	</FilterGroup>
+	{#if filterOptions}
+		{#each filterOptions as option}
+			{#if option.children && option.children.length > 0}
+				<FilterGroup name={option.name} bind:value={selectedFilters} expanded>
+					{#each option.children as child}
+						<FilterOption name={child.name} value={child.slug} />
+					{/each}
+				</FilterGroup>
+			{/if}
+		{/each}
 
-	<FilterGroup name="Type" bind:value={filters} expanded>
-		<FilterOption name="T-Shirts" value="t-shirts" />
-		<FilterOption name="Hoodies" value="hoodies" />
-	</FilterGroup>
-
-	<FilterGroup name="Color" bind:value={filters}>
-		<FilterOption name="Red" value="red" />
-		<FilterOption name="green" value="green" />
-		<FilterOption name="white" value="white" />
-	</FilterGroup>
+		<FilterGroup name="Color" bind:value={selectedFilters} expanded>
+			<FilterOption name="red" value="red" />
+			<FilterOption name="green" value="green" />
+			<FilterOption name="white" value="white" />
+			<FilterOption name="black" value="black" />
+		</FilterGroup>
+	{/if}
 </div>
 
 <style lang="scss">

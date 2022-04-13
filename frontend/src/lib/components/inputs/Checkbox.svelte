@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let checked: boolean;
 	export let name: string;
-	export let value = checked;
+	export let value = name;
 </script>
 
 <input type="checkbox" value={checked} {name} bind:checked />

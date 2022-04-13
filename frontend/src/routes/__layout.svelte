@@ -55,11 +55,11 @@
 	});
 
 	/* TIP: Hide scroll when overlay is open */
-	$: {
-		if (browser && $overlay) {
-			document.body.style.overflow = `${$overlay ? 'hidden' : 'auto'}`;
-		}
-	}
+	// $: {
+	// 	if (browser && $overlay) {
+	// 		document.body.style.overflow = `${$overlay ? 'hidden' : 'auto'}`;
+	// 	}
+	// }
 
 	/* TIP: Open overlay when drawer opens */
 	$: $overlay = drawers.cart;
@@ -70,12 +70,13 @@
 {/if}
 
 <!-- Main Section -->
+<Navbar
+	minimized={navbarMinimzed}
+	on:clickHeart
+	on:clickCart={() => setDrawerExapnded(true, 'cart')}
+/>
+
 <section bind:this={sectionWrapper}>
-	<Navbar
-		minimized={navbarMinimzed}
-		on:clickHeart
-		on:clickCart={() => setDrawerExapnded(true, 'cart')}
-	/>
 	<slot />
 	<Footer />
 </section>
@@ -113,9 +114,13 @@
 			z-index: 10;
 		}
 	}
+	.content {
+		height: 100%;
+	}
 
 	section {
-		height: 100%;
+		height: auto;
+		min-height: 100%;
 		width: 100%;
 		padding-top: 106px;
 		transition: transform 0.25s ease-out;

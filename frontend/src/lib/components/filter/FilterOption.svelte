@@ -10,7 +10,6 @@
 
 <label for={name} on:click={() => selectFilter(value)}>
 	<Checkbox {name} {value} checked={$filters.includes(value)} />
-	<!-- <input type="checkbox" {name} {value} checked={$filters.includes(value)} /> -->
 	{name}
 </label>
 
@@ -20,5 +19,6 @@
 		align-items: center;
 		gap: 7px;
 		font-size: var(--text-sm);
+		text-transform: capitalize;
 	}
 </style>

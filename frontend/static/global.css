@@ -6,10 +6,11 @@
 *::after {
 	box-sizing: border-box;
 }
-
-body {
-	width: 100%;
+html, body {
 	height: 100%;
+	width: 100%;
+}
+body {
 	font-weight: var(--fw-regular);
 	font-family: 'Montserrat', sans-serif;
 	/* font-family: 'Josefin Sans', sans-serif; */

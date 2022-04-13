@@ -15,20 +15,17 @@
 	import type { Load } from '@sveltejs/kit';
 
 	export const load: Load = async ({ params, url }) => {
-		const productId = url.searchParams.get('id');
-		const productSlug = params.product;
-		const productData = await commerce.products.retrieve(productId);
+		const permaLink = params.product;
+		const productData = await commerce.products.retrieve(permaLink, { type: 'permalink' });
 
 		/* Fail if the product has no sizes */
-		if (!isValidProduct(productData)) return { error: new Error('Invalid Product- Incomplete') };
+		if (!isValidProduct(productData)) return { status: 400, error: new Error('Invalid Product- Incomplete') };
 
 		/* TODO Handle Error for not found product */
 		console.log(productData);
 
 		return {
 			props: {
-				productSlug,
-				productId,
 				productData
 			}
 		};
@@ -39,14 +36,13 @@
 	import ProductOptions from '$lib/components/product-page/ProductOptions.svelte';
 	import { onMount } from 'svelte';
 
-	export let productId: string;
 	export let productData: Product;
 
 	let selectedVariants: { [group: string]: SelectedVariant & { assets: Asset[] } } = {};
 
 	function addToCart() {
 		addItemToCart(
-			productId,
+			productData.id,
 			Object.values(selectedVariants).reduce((acc, curr) => {
 				acc[curr.group_id] = curr.option_id;
 				return acc;

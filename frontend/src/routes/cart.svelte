@@ -71,11 +71,11 @@
 	}
 
 	$: if ($cartCount >= 1) getCartContents();
-	$: if ($cartCount == 0) isCartEmpty = true;
+	$: isCartEmpty = $cartCount <= 0;
 </script>
 
 <section class="cart container container--lg">
-	{#if false}
+	{#if !isCartEmpty}
 		<header>
 			<h2>YOUR BAG</h2>
 
@@ -141,11 +141,12 @@
 			</div>
 		</div>
 	{:else}
-	<div class="empty-cart">
-		<h4>Your bag is empty</h4>
-		<p>Once you add something in your bag - it will appear here. Ready to get started?</p>
-		<SquareButton outlined={true} href="/collections/all-products">Continue Shopping</SquareButton>
-	</div>
+		<div class="empty-cart">
+			<h4>Your bag is empty</h4>
+			<p>Once you add something in your bag - it will appear here. Ready to get started?</p>
+			<SquareButton outlined={true} href="/collections/all-products">Continue Shopping</SquareButton
+			>
+		</div>
 	{/if}
 </section>
 
@@ -157,7 +158,6 @@
 		align-items: center;
 		gap: 2rem;
 		margin: 3rem 0;
-
 		h4 {
 			font-weight: var(--fw-bold);
 			text-transform: uppercase;
@@ -167,6 +167,7 @@
 			max-width: 40ch;
 		}
 	}
+
 	.order {
 		top: 5.5rem;
 		height: max-content;
@@ -196,7 +197,6 @@
 			flex-direction: column;
 			gap: 1.5rem;
 		}
-
 		&__grid {
 			display: grid;
 			grid-template-columns: 1fr 0.5fr;

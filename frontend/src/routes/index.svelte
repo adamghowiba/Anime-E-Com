@@ -27,6 +27,7 @@ We are well aware."
 		price={42}
 		title="Anti-Magic Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -34,6 +35,7 @@ We are well aware."
 		price={42}
 		title="All Alone Tee"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -41,6 +43,7 @@ We are well aware."
 		price={42}
 		title="Do You Jest Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -48,6 +51,7 @@ We are well aware."
 		price={42}
 		title="Tokyo City Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 </FeaturedProducts>
@@ -80,13 +84,15 @@ We are well aware."
 		price={42}
 		title="Anti-Magic Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
-	/>
-	<ProductCard
+		/>
+		<ProductCard
 		thumbnail="/images/products/lone_wolf.jpg"
 		price={42}
 		title="All Alone Tee"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -94,6 +100,7 @@ We are well aware."
 		price={42}
 		title="Do You Jest Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 	<ProductCard
@@ -101,6 +108,7 @@ We are well aware."
 		price={42}
 		title="Tokyo City Hoodie"
 		features={['Mineral', 'paige pink']}
+		permaLink=""
 		newItem
 	/>
 </FeaturedProducts>

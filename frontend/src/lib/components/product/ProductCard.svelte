@@ -8,15 +8,13 @@
 	export let thumbnail: string = '/images/no_image.png';
 	export let price: number;
 	export let title: string;
-	// export let id: number = 1;
 	export let productId: string = 'unset';
 	export let features: string[] = [];
 	export let newItem: boolean = false;
 	export let saved: boolean = false;
-	export let href: string = '/';
+	export let permaLink: string;
 
 	let quickviewPopup = false;
-
 	const addSavedProduct = () => {
 		if (!saved) {
 			savedItems.addItem({ price, thumbnail, title, productId });
@@ -42,7 +40,7 @@
 
 <div class="card">
 	<HeartAction on:click={() => addSavedProduct()} {saved} />
-	<a href="/product/{slugify(title)}?id={productId}" class="card__image-wrap">
+	<a href="/product/{permaLink}" class="card__image-wrap">
 		<img class="card__image" src={thumbnail || '/images/no_image.png'} alt="" />
 
 		<!-- <div class="actions">
@@ -68,7 +66,6 @@
 			<span>{features.join(' | ')}</span>
 		</div>
 	{/if}
-
 </div>
 
 <style lang="scss">
@@ -91,9 +88,6 @@
 			// background-color: rgba(255, 179, 93, 0.445);
 			font-weight: var(--fw-semibold);
 			backdrop-filter: blur(20px);
-
-			/* TODO Make sure nothing testing for CSS vars is here */
-			color: var(--)
 		}
 	}
 	.card {

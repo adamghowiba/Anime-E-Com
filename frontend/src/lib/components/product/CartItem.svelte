@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { cartItems } from '$lib/stores/cart';
 	import { savedItems } from '$lib/stores/wishlist';
 	import type { SelectedVariant } from '@chec/commerce.js/types/selected-variant';
 	import QuanityTicker from '$lib/components/buttons/QuanityTicker.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { updateQuanitity } from '$lib/commerce/cartUtils';
 
 	export let thumbnail: string;
 	export let title: string;
@@ -21,11 +21,11 @@
 
 	function removeQuantity() {
 		if (quantity == 0) return;
-		cartItems.updateQuantity(id, --quantity);
+		updateQuanitity(id, --quantity);
 	}
 
 	function addQuantity() {
-		cartItems.updateQuantity(id, ++quantity);
+		updateQuanitity(id, ++quantity);
 	}
 
 	console.log(variants);
