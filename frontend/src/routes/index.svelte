@@ -7,19 +7,22 @@
 	import { onMount } from 'svelte';
 	import { gsap } from 'gsap';
 	import ContentCta from '$lib/components/home/ContentCTA.svelte';
-
-	let invertElement: HTMLElement;
 </script>
 
 <Hero
 	title="Minimal anime clothing."
 	subtitle="Original art, artist owened, worldwide shipping."
-	images={['dj_orange.jpg', 'leet_green.jpg', 'atsuko_shirts.jpg', 'atsuko_people.jpg', 'demon_slayer.jpg']}
-	button={{ link: '', text: 'shop' }}
+	images={[
+		'dj_orange.jpg',
+		'leet_green.jpg',
+		'atsuko_shirts.jpg',
+		'atsuko_people.jpg',
+		'demon_slayer.jpg'
+	]}
+	button={{ link: '/collections/all-products', text: 'Shop All' }}
 />
-<div class="invert" bind:this={invertElement} />
 
-<FeaturedProducts title="New releases" subtitle="mens" button={{ link: '/', name: 'View All' }}>
+<FeaturedProducts title="New releases" subtitle="Hoodies" button={{ link: '/collections/hoodies', name: 'View All' }}>
 	<ProductCard
 		thumbnail="/images/products/lone_wolf.jpg"
 		price={42}

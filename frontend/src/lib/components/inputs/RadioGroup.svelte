@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setContext } from 'svelte';
+	import { createEventDispatcher, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
 
@@ -7,10 +7,13 @@
 	export let value: any;
 	export let width: string = '100%';
 
+	const dispatch = createEventDispatcher();
+
 	$: selectedValue.set(value);
 
 	setContext('select', {
 		setSelectedValue: (val: any) => {
+			dispatch('select', val);
 			value = val;
 		},
 		selectedValue
@@ -23,8 +26,9 @@
 
 <style lang="scss">
 	.group {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+		display: flex;
+		// display: grid;
+		// grid-template-columns: repeat(auto-fit, minmax(75px, auto));
 		flex-wrap: wrap;
 		gap: 10px;
 		width: 100%;

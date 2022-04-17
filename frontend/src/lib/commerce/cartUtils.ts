@@ -2,18 +2,16 @@ import { alerts } from '$lib/stores/alerts';
 import { cartCount } from '$lib/stores/cart-store';
 import { loadingScreen } from '$lib/stores/interface';
 import type { RemoveResponse } from '@chec/commerce.js/features/cart';
-import type { SelectedVariant } from '@chec/commerce.js/types/selected-variant';
-import type { Variant } from '@chec/commerce.js/types/variant';
 import { commerce } from './commerce';
 
-export async function addItemToCart(productId: string, variants?: object) {
+export async function addItemToCart(productId: string, variants?: object, addLoader = false) {
 	try {
 		/* Add Item To commerceJS cart */
-		loadingScreen.set(true);
+		if (addLoader) loadingScreen.set(true);
 
 		const addedItem = await commerce.cart.add(productId, 1, variants);
 
-		loadingScreen.set(false);
+		if (addLoader) loadingScreen.set(false);
 		cartCount.set(addedItem.cart.total_unique_items);
 
 		alerts.addAlert('Added item to cart', 'success');
@@ -29,7 +27,7 @@ export async function removeItemFromCart(lineItemId: string): Promise<RemoveResp
 		cartCount.update((count) => (count = count - 1));
 		const removedItem = await commerce.cart.remove(lineItemId);
 
-		alerts.addAlert('Removed item to cart', 'success');
+		alerts.addAlert('Removed item from cart', 'success');
 
 		return removedItem;
 	} catch (error) {
@@ -40,6 +38,10 @@ export async function removeItemFromCart(lineItemId: string): Promise<RemoveResp
 export async function updateQuanitity(lineItemId: string, amount?: number) {
 	try {
 		const updated = await commerce.cart.update(lineItemId, { quantity: amount });
+
+		console.log('Updated product quanitity');
+
+		return updated;
 	} catch (error) {
 		alerts.addAlert('Failed to update quanitity', 'danger');
 	}

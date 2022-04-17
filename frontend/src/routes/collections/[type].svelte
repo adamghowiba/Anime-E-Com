@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	import { getProductsByType } from '$lib/commerce/collectionUtils';
+	import { getCategoriesPresent, getProductsByType, sortBy } from '$lib/commerce/collectionUtils';
 	import { commerce } from '$lib/commerce/commerce';
 	import CollectionHeader from '$lib/components/collection/CollectionHeader.svelte';
 	import Filter from '$lib/components/filter/Filter.svelte';
@@ -26,6 +26,7 @@
 
 <script lang="ts">
 	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
+	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
 
 	export let type: string;
 
@@ -34,6 +35,13 @@
 	let filterOptions: Category[];
 
 	let isFilterOpen: boolean = true;
+	let filterElement: HTMLElement;
+
+	type SortValue = 'newest' | 'price: high-low' | 'price: low-high';
+	let sortValues: SortValue[] = ['newest', 'price: high-low', 'price: low-high'];
+	let sortValue: SortValue;
+
+	$: console.log(sortValue);
 
 	/* Get products from the svelte store than update with response.
 	   Allows for quicker loading when navigating from collection-collection
@@ -48,7 +56,7 @@
 		const productData = await getProductsByType(type);
 		console.log(productData);
 
-		/* Make sure store doesn't get while navigating during loading. */
+		// Make sure store doesn't get while navigating during loading.
 		if (collectionType !== type) return;
 
 		products = productData;
@@ -71,6 +79,7 @@
 		return filteredproducts;
 	}
 
+	/* TODO: Should this be done when the first subscriber initaites */
 	async function getLocalCategories() {
 		if ($categoriesStore) return $categoriesStore;
 
@@ -80,19 +89,8 @@
 		return categories.data;
 	}
 
-	/* Return a set of the categories that are in the collection. */
-	function getCategoriesPresent(products: Product[]) {
-		const presentCatOptions = new Set<string>();
-
-		products.forEach((product) => {
-			product.categories.forEach((cat) => presentCatOptions.add(cat.slug));
-		});
-
-		return presentCatOptions;
-	}
-
 	/**
-	 * Sets the filter options the 'present' categories & their childern.
+	 * Set the filter options to be the categories present.
 	 */
 	async function sanitizeCollectionFilters() {
 		const categories = await getLocalCategories();
@@ -108,7 +106,6 @@
 		filterOptions = collectionFilters;
 	}
 
-	let filterElement: HTMLElement;
 	function handleHideFilter() {
 		gsap.to(filterElement, {
 			marginLeft: isFilterOpen ? '-290px' : '0px',
@@ -132,11 +129,24 @@
 		};
 	}
 
+	function sortProducts(sortValue: SortValue) {
+		if (!sortValue || !products) return;
+
+		const sortMap = new Map<SortValue, { type: 'price' | 'date'; order: 'asc' | 'desc' }>();
+
+		sortMap.set('newest', { type: 'date', order: 'asc' });
+		sortMap.set('price: high-low', { type: 'price', order: 'asc' });
+		sortMap.set('price: low-high', { type: 'price', order: 'desc' });
+
+		products = sortBy(products, { ...sortMap.get(sortValue) });
+	}
+
+	$: sortProducts(sortValue);
 	$: getProductsFromStore(type);
 	$: filteredProducts = getFilteredProducts(selectedFilters) || products;
 </script>
 
-<CollectionHeader subtitle="Mens" title={type} />
+<CollectionHeader subtitle="Collection" title={type} />
 
 <section class="container container--lg" class:close={!isFilterOpen}>
 	{#if filterOptions}
@@ -146,12 +156,17 @@
 	{/if}
 
 	<div class="products-wrap">
-		<SquareButton buttonColor="transparent" icon="ci:slider-01" on:click={handleHideFilter}>
-			Hide Filter
-		</SquareButton>
+		<div class="products__actions">
+			<SquareButton buttonColor="transparent" icon="ci:slider-01" on:click={handleHideFilter}>
+				Hide Filter
+			</SquareButton>
+
+			<SelectInput bind:value={sortValue} values={sortValues} name="sort_by" />
+		</div>
+
 		<div class="products">
 			{#if products}
-				{#each filteredProducts || products as item}
+				{#each filteredProducts as item}
 					<ProductCard
 						thumbnail={item?.image?.url}
 						price={parseInt(item.price.raw.toString())}
@@ -190,6 +205,10 @@
 		gap: 1.5rem;
 		row-gap: 3rem;
 		grid-template-columns: repeat(3, 1fr);
+
+		&__actions {
+			display: flex;
+		}
 	}
 	.products-wrap {
 		display: flex;

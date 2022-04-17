@@ -1,5 +1,4 @@
 // Import the Commerce module
-import type { VariantGroup } from '$lib/types/interface';
 import Commerce from '@chec/commerce.js';
 import type { Product } from '@chec/commerce.js/types/product';
 

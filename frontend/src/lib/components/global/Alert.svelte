@@ -1,16 +1,12 @@
 <script lang="ts">
-	import type { AlignLocation } from '$lib/types/interface';
 	import type { AlertType } from '$lib/types/types';
-	import { alerts } from '$lib/stores/alerts';
-	import { fade, slide, scale, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 
 	export let type: AlertType;
 	export let message: string;
-	// export let location: AlignLocation;
-	// export let count: number;
+
 </script>
 
-<!-- style="{location.vertical}: {count * 75}px" -->
 <div class="alert {type}" transition:fly={{ x: 200, duration: 400 }}>
 	{message}
 </div>
@@ -26,9 +22,6 @@
 		min-height: 60px;
 		max-width: 250px;
 		z-index: 200;
-		// position: fixed;
-		// bottom: 12px;
-		// right: 12px;
 
 		/* Alert Type Options */
 		&.danger {

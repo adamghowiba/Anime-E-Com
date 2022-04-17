@@ -1,13 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 
-	export let images: string[] = [
-		'add_front.jpg',
-		'add_product.jpg',
-		'add_side.jpg',
-		'add-side_right.jpg'
-	];
-
+	export let images: string[];
 	let sliderIndex = 0;
 
 	function setActiveSlide(index: number) {
@@ -28,13 +22,7 @@
 		sliderIndex = 0;
 	}
 
-	function imagesLoading() {
-		console.log('Loading image');
-	}
-
-	function imagesLoaded() {
-		console.log('Image Loaded');
-	}
+	/* TODO: Handle case where slider image hasn't loaded on:load */
 </script>
 
 <div class="slider">
@@ -42,7 +30,6 @@
 		{#each images as imageSrc, i}
 			<img
 				loading={i === 0 ? 'eager' : 'lazy'}
-				on:load={imagesLoaded}
 				src={imageSrc}
 				alt=""
 				style:z-index={sliderIndex === i ? '10' : '0'}
@@ -50,10 +37,19 @@
 		{/each}
 	</div>
 
-	<div class="slider__action slider__action-next" on:click={nextSlide}>
+	<div
+		class="slider__action slider__action--next"
+		class:disabled={images.length === 0}
+		on:click={nextSlide}
+	>
 		<Icon icon="ic:round-navigate-next" width={30} height={30} />
 	</div>
-	<div class="slider__action slider__action-prev" on:click={prevSlide}>
+
+	<div
+		class="slider__action slider__action--prev"
+		class:disabled={images.length === 0}
+		on:click={prevSlide}
+	>
 		<Icon icon="ic:round-navigate-next" width={30} height={30} rotate="180deg" />
 	</div>
 
@@ -90,12 +86,16 @@
 			z-index: 10;
 		}
 
-		&__action-next {
+		&__action--next {
 			right: 1rem;
 		}
 
-		&__action-prev {
+		&__action--prev {
 			left: 1rem;
+		}
+
+		.disabled {
+			opacity: 0.2;
 		}
 
 		img {

@@ -2,6 +2,7 @@
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 	import { gsap } from 'gsap';
+	import { FOOTER_BLOCKS } from '$lib/constant/footerLinks';
 
 	let iconSize: number = 17;
 	let openMobileSection: number;
@@ -13,36 +14,6 @@
 	}
 
 	onMount(() => {});
-
-	const FOOTER_BLOCKS = [
-		{
-			group: 'get help',
-			links: [
-				{ name: 'Order Status', href: '/' },
-				{ name: 'Shipping and Delivery', href: '/' },
-				{ name: 'Returns', href: '/' },
-				{ name: 'Payment Options', href: '/' },
-				{ name: 'Contact Us', href: '/' }
-			]
-		},
-		{
-			group: 'About',
-			links: [
-				{ name: 'Our Story', href: '/' },
-				{ name: 'Blog', href: '/' },
-				{ name: 'News', href: '/' },
-				{ name: 'Carrers', href: '/' }
-			]
-		},
-		{
-			group: 'Products',
-			links: [
-				{ name: 'Shoes', href: '/' },
-				{ name: 'Clothing', href: '/' },
-				{ name: 'Accessories', href: '/' }
-			]
-		}
-	];
 </script>
 
 <footer class="footer">
@@ -52,27 +23,6 @@
 			Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellendus unde eum nemo, quis ex
 			omnis distinctio
 		</p>
-
-		<!-- <div class="details__contact-block">
-			<div class="details__contact-item">
-				<div class="details__contact-icon">
-					<Icon icon="eva:pin-fill" color="black" width={iconSize} height={iconSize} />
-				</div>
-				<span>44 Elmessaha Street Dokki, Giza</span>
-			</div>
-			<div class="details__contact-item">
-				<div class="details__contact-icon">
-					<Icon icon="carbon:phone-filled" color="black" width={iconSize} height={iconSize} />
-				</div>
-				<span>(202) 37 497 155</span>
-			</div>
-			<div class="details__contact-item">
-				<div class="details__contact-icon">
-					<Icon icon="ic:baseline-email" color="black" width={iconSize} height={iconSize} />
-				</div>
-				<span>ahmad@fayroozfarm.com</span>
-			</div>
-		</div> -->
 	</div>
 
 	<div class="blocks">

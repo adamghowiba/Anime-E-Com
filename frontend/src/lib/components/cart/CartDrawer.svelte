@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { removeItemFromCart } from '$lib/commerce/cartUtils';
 	import { commerce } from '$lib/commerce/commerce';
+	import { sanitizeLineItems } from '$lib/commerce/commerceUtils';
+	import { alerts } from '$lib/stores/alerts';
 	import { cartCount } from '$lib/stores/cart-store';
 	import type { Cart } from '@chec/commerce.js/types/cart';
 	import type { LineItem } from '@chec/commerce.js/types/line-item';
@@ -10,34 +12,45 @@
 	import CartItemSkeleton from '../skeleton/CartItemSkeleton.svelte';
 	import ProductDrawer from './ProductDrawer.svelte';
 
+	/* 
+		TODO: Add some form of animation or make price update instantly.
+	*/
+
 	let cartContents: LineItem[];
 	let cartData: Cart;
+	$: subtotal = cartData?.subtotal?.formatted_with_symbol;
 
 	const dispatch = createEventDispatcher();
 
-	async function loadCartContents() {
-		/* TODO: Remove console log */
-		console.debug('Loading cart drawer contents...');
+	function refreshCartSubtotal({ detail }) {
+		subtotal = detail;
+	}
 
+	async function loadCartContents() {
 		const cartId = commerce.cart.id();
 		cartData = await commerce.cart.retrieve(cartId);
 		cartContents = cartData.line_items;
+		const invalidItems = await sanitizeLineItems(cartData.line_items);
+
+		if (invalidItems) alerts.addAlert('Item in cart has been removed from the store.', 'warning');
 	}
 
 	async function handleRemove(lineItemId: string) {
 		cartContents = cartContents.filter((item) => item.id !== lineItemId);
-		const itemRemoved = await removeItemFromCart(lineItemId);
+		const updatedCart = await removeItemFromCart(lineItemId);
+
+		subtotal = updatedCart.cart.subtotal.formatted_with_symbol;
 	}
 
 	$: {
-		if ($cartCount > 0) loadCartContents();
+		loadCartContents();
 	}
 </script>
 
 <ProductDrawer
 	drawerType="cart"
 	itemCount={$cartCount}
-	subtotal={cartData?.subtotal?.formatted_with_symbol}
+	{subtotal}
 	on:click={() => dispatch('cartClosed')}
 >
 	{#if !cartContents}
@@ -46,16 +59,20 @@
 		{/each}
 	{:else}
 		{#each cartContents as item}
-			<CartItem
-				price={item.price.raw}
-				thumbnail={item.image.url}
-				title={item.product_name}
-				id={item.id}
-				productId={item.product_id}
-				quantity={item.quantity}
-				variants={item.selected_options}
-				on:handleRemove={() => handleRemove(item.id)}
-			/>
+			{#if item.permalink}
+				<CartItem
+					price={item.price.raw}
+					thumbnail={item.image?.url}
+					title={item.product_name}
+					id={item.id}
+					permalink={item.permalink}
+					productId={item.product_id}
+					variants={item.selected_options}
+					bind:quantity={item.quantity}
+					on:quantityUpdated={refreshCartSubtotal}
+					on:handleRemove={() => handleRemove(item.id)}
+				/>
+			{/if}
 		{/each}
 	{/if}
 </ProductDrawer>

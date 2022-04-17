@@ -3,13 +3,14 @@
 	import { createEventDispatcher } from 'svelte';
 
 	export let quantity: number;
+	export let updatingQuantity: boolean;
 
 	const dispatch = createEventDispatcher();
 
 	let iconSize = 15;
 </script>
 
-<div class="quantity">
+<div class="quantity" class:updatingQuantity>
 	<button class="quantity__action quantity__action--remove" on:click={() => dispatch('remove')}>
 		<Icon icon="akar-icons:minus" color="inherit" width={iconSize} height={iconSize} />
 	</button>
@@ -33,6 +34,10 @@
 		align-items: center;
 		color: #949494;
 
+		&.updatingQuantity &__action {
+			opacity: 0.24;
+		}
+
 		span {
 			position: relative;
 			font-size: var(--text-sm);
@@ -52,7 +57,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-
+		transition: opacity 0.15s linear;
+		
 		&:hover {
 			cursor: pointer;
 		}

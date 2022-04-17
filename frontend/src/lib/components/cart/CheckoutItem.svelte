@@ -12,6 +12,7 @@
 	export let lineItemId: string;
 	export let productId: string;
 	export let quantity: number;
+	export let permalink: string;
 
 	/* Style Props */
 	export let imgSize: string = '120px';
@@ -30,7 +31,7 @@
 </script>
 
 <div class="item">
-	<a href="" class="item__image">
+	<a href="/product/{permalink}" class="item__image">
 		<img src={thumbnail} alt="" style="--imgSize: {imgSize};" />
 	</a>
 

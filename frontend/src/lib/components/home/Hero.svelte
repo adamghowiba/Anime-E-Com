@@ -4,6 +4,7 @@
 	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 	import { gsap, Power3 } from 'gsap';
 	import { fade } from 'svelte/transition';
+	import { onMount } from 'svelte';
 
 	export let title: string;
 	export let subtitle: string;
@@ -23,6 +24,25 @@
 		controlActiveBlock.style.transform = `translateX(${index * controlBlockSize}px)`;
 		activeSliderIndex = index;
 	}
+
+	function startSliderRotation(time: number) {
+		let interval = setInterval(() => {
+			if (++activeSliderIndex >= images.length - 1) activeSliderIndex = 0;
+
+			handleControlClick(activeSliderIndex);
+		}, time);
+
+		return interval;
+	}
+
+	onMount(() => {
+		/* TODO: Add image sliding animation. */
+		// const interval = startSliderRotation(2400);
+
+		return () => {
+			// clearInterval(interval);
+		};
+	});
 
 	$: isSlider = images.length > 0;
 </script>
@@ -169,6 +189,6 @@
 	@media screen and (max-width: 425px) {
 		.hero__content {
 			padding: 0 1rem;
-		}	
+		}
 	}
 </style>

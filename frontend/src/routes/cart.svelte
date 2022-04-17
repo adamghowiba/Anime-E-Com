@@ -30,14 +30,10 @@
 	/* TODO: Use same toke in checkout as cart */
 	async function getCartContents() {
 		const cartId = commerce.cart.id();
-
 		try {
 			cartData = await commerce.cart.retrieve(cartId);
 			cartContents = cartData.line_items;
 			checkoutData = await commerce.checkout.generateToken(cartId, { type: 'cart' });
-
-			console.log(cartData);
-			console.log(cartContents);
 		} catch (error) {
 			if (error.statusCode === 422) return (isCartEmpty = true);
 			console.error(error);
@@ -53,14 +49,14 @@
 
 		$loadingScreen = true;
 		const discountData = await commerce.checkout.checkDiscount(checkoutData.id, { code });
-		if (!discountData.valid) return (discountError = 'Promor code is invalid or expired.');
+		$loadingScreen = false;
 
+		if (!discountData.valid) return (discountError = 'Promor code is invalid or expired.');
 		discount = discountData;
 
 		/* Update Price After Discount */
 		cartData.subtotal.formatted_with_code = discount.live.total.formatted_with_code;
 
-		$loadingScreen = false;
 		console.log(discount);
 	}
 
@@ -87,17 +83,20 @@
 			<div class="cart__items">
 				{#if cartContents}
 					{#each cartContents as item}
-						<CheckoutItem
-							thumbnail={item.image.url}
-							price={item.price.raw}
-							quantity={item.quantity}
-							title={item.name}
-							lineItemId={item.id}
-							selectedOptions={item.selected_options}
-							productId={item.product_id}
-							imgSize="215px"
-							on:itemRemoved={handleItemRemovedFromCart}
-						/>
+						{#if item.permalink}
+							<CheckoutItem
+								thumbnail={item.image.url}
+								price={item.price.raw}
+								quantity={item.quantity}
+								title={item.name}
+								lineItemId={item.id}
+								selectedOptions={item.selected_options}
+								productId={item.product_id}
+								permalink={item.permalink}
+								imgSize="215px"
+								on:itemRemoved={handleItemRemovedFromCart}
+							/>
+						{/if}
 					{/each}
 				{:else}
 					{#each Array($cartCount) as _}
@@ -212,7 +211,7 @@
 			font-weight: var(--fw-bold);
 			margin-bottom: 0.8rem;
 		}
-	
+
 		a {
 			font-size: var(--text-xsm);
 			text-transform: uppercase;

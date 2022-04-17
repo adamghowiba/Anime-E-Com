@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 
-	type SelectEffect = 'fill' | 'border';
+	type ActionEffect = 'fill' | 'border' | 'none';
 
 	export let name: string;
 	export let value: any;
@@ -10,18 +10,19 @@
 	export let height: string = '48px';
 	export let border: boolean = true;
 	export let borderColor: string = 'black';
-	export let hoverable: boolean = true;
-	export let selectEffect: SelectEffect = 'fill';
+	export let selectEffect: ActionEffect = 'fill';
+	export let hoverEffect: ActionEffect = 'fill';
+	export let selected: boolean = false;
 
 	const { setSelectedValue, selectedValue } = getContext('select');
 </script>
 
 <label
-	class="radio selected--{selectEffect}"
+	class="radio selected--{selectEffect} hover--{hoverEffect}"
 	style="--width: {width}; --height: {height};"
-	class:hoverable
-	class:selected={$selectedValue === value}
+	class:selected={$selectedValue === value || selected}
 	style:border={border ? `1px solid ${borderColor}` : 'none'}
+	on:mouseenter
 	on:click={() => setSelectedValue(value)}
 >
 	<input type="radio" {name} {value} />
@@ -37,10 +38,11 @@
 		min-width: 71px;
 		min-height: 48px;
 		height: var(--height);
-		width: var(--width);
+		// width: var(--width);
 		border: 1px solid black;
 		transition: background-color 0.085s linear, color 0.085s linear, border-color 0.15s ease-out;
 
+		/* Selected Effects */
 		&.selected {
 			&.selected--fill {
 				background-color: black;
@@ -52,14 +54,27 @@
 			}
 		}
 
+		/* Hover Effects */
+		&.hover--fill:hover {
+			background-color: black;
+			color: white;
+		}
+
+		&.hover--border:hover {
+			border: 1px solid black !important;
+		}
+
 		&.hoverable:hover {
 			background-color: black;
 			color: white;
 		}
 
 		:global(img) {
-			width: var(--width);
-			height: var(--height);
+			display: block;
+			height: auto;
+			width: 100%;
+			max-width: 76px;
+			background-color: white;
 			object-fit: contain;
 		}
 	}

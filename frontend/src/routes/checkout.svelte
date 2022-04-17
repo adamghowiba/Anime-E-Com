@@ -10,6 +10,7 @@
 	import CartItem from '$lib/components/product/CartItem.svelte';
 	import CartItemSkeleton from '$lib/components/skeleton/CartItemSkeleton.svelte';
 	import { alerts } from '$lib/stores/alerts';
+	import { cartCount } from '$lib/stores/cart-store';
 	import { loadingScreen } from '$lib/stores/interface';
 	import type { Address, CheckoutData } from '$lib/types/checkout';
 	import { getAddressFormatted, getAddressFullName } from '$lib/utils/stringUtils';
@@ -105,6 +106,7 @@
 			});
 
 			console.debug('Order successful', capture);
+			$cartCount = 0;
 		} catch (error) {
 			console.error('Error occured while processing order', error);
 		} finally {
@@ -234,6 +236,7 @@
 						price={data.price.raw}
 						productId={data.product_id}
 						quantity={data.quantity}
+						permalink={data.permalink}
 						id={data.id}
 						variants={data.selected_options}
 						thumbnail={data.image.url}

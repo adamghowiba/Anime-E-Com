@@ -2,17 +2,17 @@
 	import { addItemToCart } from '$lib/commerce/cartUtils';
 	import { commerce, isValidProduct } from '$lib/commerce/commerce';
 	import ToggleList from '$lib/components/account/ToggleList.svelte';
-	import Breadcrumbs from '$lib/components/global/Breadcrumbs.svelte';
 	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
-	import RadioGroup from '$lib/components/inputs/RadioGroup.svelte';
-	import RadioInput from '$lib/components/inputs/RadioInput.svelte';
+	import Breadcrumbs from '$lib/components/global/Breadcrumbs.svelte';
+	import ProductOptions from '$lib/components/product-page/ProductOptions.svelte';
 	import ProductSlider from '$lib/components/product/ProductSlider.svelte';
 	import { navbarLoading, navbarMinimzed } from '$lib/stores/interface';
-	import type { Asset } from '@chec/commerce.js/types/asset';
+	import type { ISelectedVariant } from '$lib/types/interface';
+	import type { SelectedOption } from '$lib/types/types';
 	import type { Product } from '@chec/commerce.js/types/product';
-	import type { SelectedVariant } from '@chec/commerce.js/types/selected-variant';
 	import Icon from '@iconify/svelte';
 	import type { Load } from '@sveltejs/kit';
+	import { onMount } from 'svelte';
 
 	export const load: Load = async ({ params, url }) => {
 		const permaLink = params.product;
@@ -20,10 +20,7 @@
 
 		/* Fail if the product has no sizes */
 		if (!isValidProduct(productData))
-			return { status: 400, error: new Error('Invalid Product- Incomplete') };
-
-		/* TODO Handle Error for not found product */
-		console.log(productData);
+			return { status: 503, error: new Error('Invalid Product- Incomplete') };
 
 		return {
 			props: {
@@ -34,41 +31,48 @@
 </script>
 
 <script lang="ts">
-	import ProductOptions from '$lib/components/product-page/ProductOptions.svelte';
-	import { onMount } from 'svelte';
-	import { session } from '$app/stores';
-
 	export let productData: Product;
 
-	let selectedVariants: { [group: string]: SelectedVariant & { assets: Asset[] } } = {};
+	let selectedVariants: ISelectedVariant = {};
+	let isLoading: boolean = false;
+	let productPrice: number = productData.price.raw;
+	let selectedColorImages = productData.assets.map(({ url }) => url);
 
-	function addToCart() {
-		addItemToCart(
+	async function addToCart() {
+		isLoading = true;
+		await addItemToCart(
 			productData.id,
 			Object.values(selectedVariants).reduce((acc, curr) => {
 				acc[curr.group_id] = curr.option_id;
 				return acc;
-			}, {})
+			}, {}),
+			false
 		);
+		isLoading = false;
 	}
 
-	/* 	function addToWishlist() {
-		savedItems.addItem({
-			price: productData.price.raw,
-			title: productData.name,
-			productId: productData.id,
-			thumbnail: selectedColorThumbnail
+	function updatePrice(selectedVariants: ISelectedVariant) {
+		Object.values(selectedVariants).forEach((variant) => {
+			if (variant.price.raw) productPrice = productData.price.raw + variant.price.raw;
 		});
-	} */
+	}
+
+	function handleColorSelect(event: { detail: SelectedOption }) {
+		const detail = event.detail;
+
+		if (detail.assets.length > 0) {
+			selectedColorImages = detail.assets.map(({ url }) => url);
+			return;
+		}
+
+		selectedColorImages = productData.assets.map(({ url }) => url);
+	}
 
 	onMount(() => {
 		$navbarLoading = false;
 	});
 
-	$: selectedColorImages =
-		selectedVariants?.color?.assets?.length > 0
-			? [...selectedVariants.color.assets.map((asset) => asset.url)]
-			: [...productData.assets.map(({ url }) => url)];
+	$: updatePrice(selectedVariants);
 </script>
 
 <header class="breadcrumbs container container--lg">
@@ -82,7 +86,7 @@
 
 <div class="mobile-title container container--lg">
 	<h3 class="title">{productData.name}</h3>
-	<h5 class="price">${productData.price.raw}</h5>
+	<h5 class="price">${productPrice}</h5>
 </div>
 
 <section class="product container container--lg">
@@ -90,20 +94,26 @@
 
 	<div class="details" class:extraTopSpace={!$navbarMinimzed}>
 		<h3 class="title">{productData.name}</h3>
-		<h5 class="price">${productData.price.raw}</h5>
+		<h5 class="price">${productPrice}</h5>
 
-		<ProductOptions {productData} bind:selectedVariants />
+		<ProductOptions {productData} bind:selectedVariants on:select={handleColorSelect} />
 
 		<div class="details__actions">
 			<SquareButton
 				on:click={addToCart}
 				buttonColor="black"
 				justify="space-between"
+				icon={isLoading ? null : 'bi:arrow-down'}
 				width="100%"
 				disabled={Object.values(selectedVariants).length !== productData.variant_groups.length}
 				outlined
 			>
-				Add to cart
+				{#if !isLoading}
+					Add to cart
+				{:else}
+					<!-- TODO: Add spinner -->
+					Loading...
+				{/if}
 			</SquareButton>
 
 			<div class="details__actions-save" on:click>

@@ -11,31 +11,49 @@
 	export let variants: SelectedVariant[] = [];
 	export let id: string = null;
 	export let productId: string;
+	export let permalink: string;
 	export let quantity: number;
 
 	/* Toggleable UI Elements */
 	export let quantityTicker: boolean = true;
 	export let removeAction: boolean = true;
 
+	let updatingQuantity = false;
+
 	const dispatch = createEventDispatcher();
 
-	function removeQuantity() {
-		if (quantity == 0) return;
-		updateQuanitity(id, --quantity);
+	async function removeQuantity() {
+		if (quantity == 0 || updatingQuantity) return;
+
+		try {
+			updatingQuantity = true;
+
+			const cart = await updateQuanitity(id, --quantity);
+			dispatch('quantityUpdated', cart.cart.subtotal.formatted_with_symbol);
+		} finally {
+			updatingQuantity = false;
+		}
 	}
 
-	function addQuantity() {
-		updateQuanitity(id, ++quantity);
-	}
+	async function addQuantity() {
+		if (updatingQuantity) return;
 
-	console.log(variants);
+		try {
+			updatingQuantity = true;
+			const cart = await updateQuanitity(id, ++quantity);
+
+			dispatch('quantityUpdated', cart.cart.subtotal.formatted_with_symbol);
+		} finally {
+			updatingQuantity = false;
+		}
+	}
 </script>
 
 <div class="item">
 	<img class="item__image" src={thumbnail} alt="" />
 
 	<div class="item__info">
-		<h5>{title}</h5>
+		<a class="item__title" href="/product/{permalink}">{title}</a>
 
 		<div class="item__variants">
 			{#if variants.length >= 1}
@@ -48,7 +66,12 @@
 
 		<div class="item__actions">
 			{#if quantityTicker}
-				<QuanityTicker {quantity} on:add={addQuantity} on:remove={removeQuantity} />
+				<QuanityTicker
+					{updatingQuantity}
+					{quantity}
+					on:add={addQuantity}
+					on:remove={removeQuantity}
+				/>
 			{/if}
 			{#if removeAction}
 				<button on:click={() => dispatch('handleRemove')}>Remove</button>
@@ -65,14 +88,14 @@
 		padding-bottom: 20px;
 		border-bottom: 1px solid var(--color-gray-s2);
 
-		h5 {
-			font-size: var(--text-base);
-			text-transform: capitalize;
-		}
-
 		span {
 			display: block;
 			// font-size: var(--text-sm);
+			text-transform: capitalize;
+		}
+
+		&__title {
+			font-size: var(--text-base);
 			text-transform: capitalize;
 		}
 

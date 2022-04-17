@@ -11,9 +11,12 @@
 	.dropdown {
 		position: absolute;
 		width: 100%;
-		height: 320px;
+		min-height: 320px;
 		background-color: rgb(255, 255, 255);
 		z-index: 100;
+		
+		bottom: 0px;
+		transform: translateY(100%);
 
         &__container {
             display: flex;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/env';
-	import { beforeNavigate } from '$app/navigation';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import Alert from '$lib/components/global/Alert.svelte';
 	import Drawers from '$lib/components/cart/CartDrawer.svelte';
 	import Footer from '$lib/components/global/Footer.svelte';
@@ -11,10 +11,12 @@
 		navOverlay,
 		overlay,
 		navbarMinimzed as navMinimzedStore,
-		loadingScreen
+		loadingScreen,
+navbarLoading
 	} from '$lib/stores/interface';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+import NavbarNew from '$lib/components/nav/NavbarNew.svelte';
 
 	let navbarMinimzed = false;
 	let lastScrollY = 0;
@@ -52,7 +54,12 @@
 
 	beforeNavigate(() => {
 		setDrawerExapnded(false, 'cart');
+		$navbarLoading = true;
 	});
+
+	afterNavigate(() => {
+		$navbarLoading = false;
+	})
 
 	/* TIP: Hide scroll when overlay is open */
 	// $: {
@@ -70,7 +77,7 @@
 {/if}
 
 <!-- Main Section -->
-<Navbar
+<NavbarNew
 	minimized={navbarMinimzed}
 	on:clickHeart
 	on:clickCart={() => setDrawerExapnded(true, 'cart')}

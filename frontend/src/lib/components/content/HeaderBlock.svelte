@@ -18,7 +18,7 @@
 <div class="block {contentAlign}" style="--color: {color}">
 	<h2 class="text--title">{title}</h2>
 	<p>{subtitle}</p>
-	<SquareButton outlined buttonColor="white">Shop Now</SquareButton>
+	<SquareButton outlined buttonColor="white" href={button.link}>{button.text}</SquareButton>
 	<!-- <Button buttonColor="white">Shop</Button> -->
 </div>
 
