@@ -64,7 +64,6 @@
 		gap: 1.5rem;
 		padding-bottom: 20px;
 		border-bottom: 1px solid var(--color-gray-s2);
-		min-height: 120px;
 
 		h5 {
 			font-size: var(--text-base);

@@ -24,7 +24,7 @@
 <style lang="scss">
 	.new-release {
 		display: flex;
-		gap: 2rem;
+		gap: 3rem;
 		display: flex;
 		flex-direction: column;
 		

@@ -41,7 +41,7 @@
 	<div class="slider__images">
 		{#each images as imageSrc, i}
 			<img
-				loading="{i === 0 ? 'eager' : 'lazy'}"
+				loading={i === 0 ? 'eager' : 'lazy'}
 				on:load={imagesLoaded}
 				src={imageSrc}
 				alt=""
@@ -67,14 +67,57 @@
 </div>
 
 <style lang="scss">
+	.slider {
+		position: relative;
+		max-height: 780px;
+		// height: 1200px;
+
+		&__images {
+			height: 780px;
+		}
+
+		&__action {
+			width: 50px;
+			height: 50px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: white;
+			border: 1px solid black;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			z-index: 10;
+		}
+
+		&__action-next {
+			right: 1rem;
+		}
+
+		&__action-prev {
+			left: 1rem;
+		}
+
+		img {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			background-color: white;
+		}
+	}
 	.controls {
 		position: absolute;
+		justify-content: center;
 		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
 		gap: 10px;
 		bottom: 1rem;
 		left: 50%;
 		transform: translateX(-50%);
-		z-index: 20;
+		z-index: 10;
+		padding: 0 1rem;
 
 		&__option-wrap {
 			height: 25px;
@@ -100,42 +143,36 @@
 			height: 8px;
 		}
 	}
-	.slider {
-		position: relative;
-		max-height: 780px;
-		// height: 1200px;
 
-		&__images {
-			height: 780px;
+	/* Laptop */
+	@media screen and (max-width: 1024px) {
+		.slider {
+			&__images {
+				height: 300px;
+			}
+
+			&__action {
+				width: 35px;
+				height: 35px;
+				border-width: 1px;
+			}
 		}
+	}
 
-		&__action {
-			width: 50px;
-			height: 50px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			background-color: white;
-			border: 1px solid black;
-			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
-			z-index: 20;
+	/* Tablet */
+	@media screen and (max-width: 768px) {
+		.slider {
+			&__images {
+				min-height: 400px;
+				height: auto;
+			}
 		}
+	}
 
-		&__action-next {
-			right: 1rem;
-		}
-
-		&__action-prev {
-			left: 1rem;
-		}
-
-		img {
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
+	/* Tablet */
+	@media screen and (max-width: 425px) {
+		.slider__images {
+			height: auto;
 		}
 	}
 </style>

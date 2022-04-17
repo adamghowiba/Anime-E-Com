@@ -11,7 +11,7 @@
 	.dropdown {
 		position: absolute;
 		width: 100%;
-		min-height: 320px;
+		height: 320px;
 		background-color: rgb(255, 255, 255);
 		z-index: 100;
 

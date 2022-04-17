@@ -212,12 +212,17 @@
 			font-weight: var(--fw-bold);
 			margin-bottom: 0.8rem;
 		}
-		h5 {
-		}
+	
 		a {
 			font-size: var(--text-xsm);
 			text-transform: uppercase;
 			text-decoration: underline;
+		}
+	}
+
+	@media screen and (max-width: 1024px) {
+		.cart__grid {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

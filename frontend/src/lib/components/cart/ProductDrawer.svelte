@@ -99,7 +99,7 @@
 
 	.drawer {
 		height: 100%;
-		min-width: 550px;
+		width: 550px;
 		position: fixed;
 		top: 0;
 		z-index: 300;
@@ -209,6 +209,25 @@
 
 		::-webkit-scrollbar-track {
 			background-color: var(--color-gray-s1);
+		}
+	}
+
+	@media screen and (max-width: 1024px) {
+		.drawer {
+			width: 500px;
+		}
+	}
+
+
+	@media screen and (max-width: 768px) {
+		.drawer {
+			width: 420px;
+		}
+	}
+
+	@media screen and (max-width: 425px) {
+		.drawer {
+			width: 100%;
 		}
 	}
 </style>

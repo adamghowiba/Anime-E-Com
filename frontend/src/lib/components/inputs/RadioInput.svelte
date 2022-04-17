@@ -34,10 +34,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		min-width: var(--width, 71px);
-		min-height: var(--height, 48px);
-		height: auto;
-		width: auto;
+		min-width: 71px;
+		min-height: 48px;
+		height: var(--height);
+		width: var(--width);
 		border: 1px solid black;
 		transition: background-color 0.085s linear, color 0.085s linear, border-color 0.15s ease-out;
 
@@ -67,6 +67,7 @@
 		position: absolute;
 		display: block;
 		appearance: none;
+		-webkit-appearance: none;
 		width: 100%;
 		height: 100%;
 		margin: 0;

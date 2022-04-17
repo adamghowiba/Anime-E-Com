@@ -1,7 +1,48 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import { onMount } from 'svelte';
+	import { gsap } from 'gsap';
 
 	let iconSize: number = 17;
+	let openMobileSection: number;
+
+	function handleMobileSectionClick(index: number) {
+		if (openMobileSection === index) return (openMobileSection = null);
+
+		openMobileSection = index;
+	}
+
+	onMount(() => {});
+
+	const FOOTER_BLOCKS = [
+		{
+			group: 'get help',
+			links: [
+				{ name: 'Order Status', href: '/' },
+				{ name: 'Shipping and Delivery', href: '/' },
+				{ name: 'Returns', href: '/' },
+				{ name: 'Payment Options', href: '/' },
+				{ name: 'Contact Us', href: '/' }
+			]
+		},
+		{
+			group: 'About',
+			links: [
+				{ name: 'Our Story', href: '/' },
+				{ name: 'Blog', href: '/' },
+				{ name: 'News', href: '/' },
+				{ name: 'Carrers', href: '/' }
+			]
+		},
+		{
+			group: 'Products',
+			links: [
+				{ name: 'Shoes', href: '/' },
+				{ name: 'Clothing', href: '/' },
+				{ name: 'Accessories', href: '/' }
+			]
+		}
+	];
 </script>
 
 <footer class="footer">
@@ -35,38 +76,32 @@
 	</div>
 
 	<div class="blocks">
-		<div class="blocks__item">
-			<h5>Shopping Services</h5>
-			<a href="/">Schedule Consultation</a>
-			<a href="/">Showrooms</a>
-			<a href="/">Trade Program</a>
-			<a href="/">Outlet</a>
-		</div>
-		<div class="blocks__item">
-			<h5>About</h5>
-			<a href="/">Our Story</a>
-			<a href="/">Reviews</a>
-			<a href="/">Carrers</a>
-			<a href="/">Our blog</a>
-		</div>
-		<div class="blocks__item">
-			<h5>Resources</h5>
-			<a href="/">Look Up Order Status</a>
-			<a href="/">Returns</a>
-			<a href="/">Shipping & Delivery</a>
-			<a href="/">FAQ</a>
-		</div>
+		{#each FOOTER_BLOCKS as block, i}
+			{@const isOpen = openMobileSection === i}
+
+			<div class="blocks__item" class:open={isOpen} on:click={() => handleMobileSectionClick(i)}>
+				<div class="blocks__title">
+					<h5>{block.group}</h5>
+					<i>
+						<Icon icon={isOpen ? 'akar-icons:minus' : 'akar-icons:plus'} />
+					</i>
+				</div>
+
+				<div class="blocks__links">
+					{#each block.links as link}
+						<a href={link.href}>{link.name} </a>
+					{/each}
+				</div>
+			</div>
+		{/each}
 	</div>
 
 	<div class="bottom">
-		<!-- <div class="bottom__divider" /> -->
-		<div class="bottom__content">
-			<span class="bottom__legal">All Rights Reserved | Copyright © Web Revived</span>
-			<span class="bottom__credits"
-				>Designed by <a href="http://webrevived.com" target="_blank">Web Revived</a> | Custom Built With
-				Svelte</span
-			>
-		</div>
+		<span class="bottom__legal">All Rights Reserved | Copyright © Web Revived</span>
+		<span class="bottom__credits"
+			>Designed by <a href="http://webrevived.com" target="_blank">Web Revived</a> | Custom Built With
+			Svelte</span
+		>
 	</div>
 </footer>
 
@@ -81,7 +116,6 @@
 		background-color: black;
 		color: white;
 		display: grid;
-		border-top: 1px solid #e7e7e7;
 		grid-template-columns: 1fr 1.5fr;
 		grid-template-rows: 1fr auto;
 		grid-template-areas:
@@ -106,7 +140,7 @@
 			text-transform: uppercase;
 			font-weight: var(--fw-semibold);
 		}
-		
+
 		h4 {
 			font-size: 16px;
 			margin-bottom: 10px;
@@ -126,25 +160,27 @@
 			flex-direction: column;
 			gap: 1rem;
 		}
+
+		&__links {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			height: auto;
+			transition: max-height 0.2s ease-out, opacity 0.15s linear;
+		}
+
+		i {
+			display: none;
+		}
 	}
 
 	.bottom {
 		grid-area: bottom;
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
 		width: 100%;
-
-		&__divider {
-			width: 100%;
-			height: 1px;
-			background-color: #e7e7e7;
-		}
-
-		&__content {
-			display: flex;
-			justify-content: space-between;
-		}
+		display: flex;
+		gap: 12px;
+		display: flex;
+		justify-content: space-between;
 
 		a,
 		span {
@@ -186,6 +222,63 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+		}
+	}
+
+	/* Tablet */
+	@media screen and (max-width: 768px) {
+		.bottom {
+			flex-direction: column;
+		}
+		.blocks {
+			flex-direction: column;
+			gap: 1rem;
+
+			&__title {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			&__links {
+				max-height: 0px;
+				opacity: 0;
+				overflow: hidden;
+				padding: 1rem 0;
+			}
+
+			.open &__links {
+				opacity: 1;
+				max-height: 200px;
+				height: auto;
+			}
+
+			i {
+				display: block;
+			}
+		}
+
+		.blocks__item {
+			padding: 5px;
+			gap: 0;
+
+			&.open::after {
+				content: '';
+				width: 100%;
+				height: 1px;
+				background-color: rgba(58, 58, 58, 0.685);
+			}
+		}
+
+		.footer {
+			grid-template-columns: 1fr;
+			// grid-template-rows: 1fr;
+			grid-template-areas:
+				'blocks'
+				'details'
+				'bottom';
+			padding: 2rem 1.5rem;
+			gap: 2rem;
 		}
 	}
 </style>

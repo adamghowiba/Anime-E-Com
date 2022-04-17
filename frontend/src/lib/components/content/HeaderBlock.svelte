@@ -16,7 +16,7 @@
 </script>
 
 <div class="block {contentAlign}" style="--color: {color}">
-	<h2>{title}</h2>
+	<h2 class="text--title">{title}</h2>
 	<p>{subtitle}</p>
 	<SquareButton outlined buttonColor="white">Shop Now</SquareButton>
 	<!-- <Button buttonColor="white">Shop</Button> -->

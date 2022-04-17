@@ -107,11 +107,11 @@
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.466);
 		backdrop-filter: blur(3px);
-		z-index: 200;
+		z-index: 300;
 		top: 0;
 
 		&.navbarShown {
-			z-index: 10;
+			z-index: 50;
 		}
 	}
 	.content {

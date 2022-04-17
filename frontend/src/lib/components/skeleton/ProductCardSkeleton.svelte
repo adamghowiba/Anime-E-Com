@@ -20,6 +20,7 @@ import Skeleton from "./Skeleton.svelte";
     .skeleton {
         display: flex;
         flex-direction: column;
+        width: 100%;
         gap: 12px;
 
         &__details {

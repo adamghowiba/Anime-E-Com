@@ -49,26 +49,68 @@
 		</div> -->
 	</a>
 
-	<div class="card__header">
-		{#if newItem}
-			<div class="card__badge">
-				<span>NEW</span>
+	<div class="details">
+		<p class="details__title">
+			{title}
+		</p>
+
+		<div class="details__header">
+			{#if newItem}
+				<div class="details__badge">
+					<span>NEW</span>
+				</div>
+			{/if}
+			<span>${price}</span>
+		</div>
+
+		{#if features.length >= 1}
+			<div class="details__features">
+				<span>{features.join(' | ')}</span>
 			</div>
 		{/if}
-		<span class="card__price">${price}</span>
 	</div>
-
-	<p class="card__title">
-		{title}
-	</p>
-	{#if features.length >= 1}
-		<div class="card__features">
-			<span>{features.join(' | ')}</span>
-		</div>
-	{/if}
 </div>
 
 <style lang="scss">
+	.card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		&:hover .quickadd {
+			opacity: 1;
+		}
+
+		&__heart {
+			position: absolute;
+			top: 12px;
+			right: 12px;
+		}
+
+		&__image-wrap {
+			position: relative;
+			display: block;
+			height: 100%;
+			max-width: 400px;
+			object-fit: cover;
+		}
+
+		&__image {
+			display: block;
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+			object-position: 50%;
+		}
+
+		&__divider {
+			height: 100%;
+			width: 1px;
+			background-color: gray;
+		}
+	}
+
 	.actions {
 		display: flex;
 		gap: 1rem;
@@ -90,29 +132,15 @@
 			backdrop-filter: blur(20px);
 		}
 	}
-	.card {
-		position: relative;
+	.details {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 6px;
+		min-height: 50px;
+		flex-shrink: 0;
 
-		&:hover .quickadd {
-			opacity: 1;
-		}
-
-		&__heart {
-			position: absolute;
-			top: 12px;
-			right: 12px;
-		}
-
-		&__image-wrap {
-			position: relative;
-			display: block;
-			height: 100%;
-			max-width: 100%;
-			max-height: 300px;
-			object-fit: cover;
+		span {
+			font-size: 14px;
 		}
 
 		&__header {
@@ -120,14 +148,6 @@
 			justify-content: space-between;
 			font-weight: var(--fw-semibold);
 			align-items: center;
-		}
-
-		&__image {
-			display: block;
-			height: 100%;
-			width: 100%;
-			max-height: 500px;
-			object-fit: contain;
 		}
 
 		&__title {
@@ -150,11 +170,6 @@
 			font-size: 14px;
 			color: #6e6e6e;
 			text-transform: capitalize;
-		}
-		&__divider {
-			height: 100%;
-			width: 1px;
-			background-color: gray;
 		}
 	}
 </style>

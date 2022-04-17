@@ -5,6 +5,7 @@
 
 	export let selectedValue = writable<any>();
 	export let value: any;
+	export let width: string = '100%';
 
 	$: selectedValue.set(value);
 
@@ -14,17 +15,25 @@
 		},
 		selectedValue
 	});
-
 </script>
 
-<div class="group">
+<div class="group" style:width>
 	<slot />
 </div>
 
 <style lang="scss">
 	.group {
-		display: flex;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
 		flex-wrap: wrap;
-		gap: 7px;
+		gap: 10px;
+		width: 100%;
+	}
+
+	/* Tablet */
+	@media screen and (max-width: 768px) {
+		.group {
+			flex-wrap: nowrap;
+		}
 	}
 </style>

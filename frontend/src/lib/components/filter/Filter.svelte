@@ -53,9 +53,7 @@
 
 <style lang="scss">
 	.filter {
-		max-width: 278px;
 		width: 100%;
-		// border: 1px solid var(--color-gray-s1);
 		height: auto;
 
 		&__header {

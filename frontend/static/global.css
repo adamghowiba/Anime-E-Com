@@ -6,7 +6,8 @@
 *::after {
 	box-sizing: border-box;
 }
-html, body {
+html,
+body {
 	height: 100%;
 	width: 100%;
 }
@@ -62,7 +63,7 @@ h3 {
 }
 .overlay--fade {
 	background: rgb(0, 0, 0);
-	background: linear-gradient(90deg, rgba(0, 0, 0, 0.795) 0%, rgba(255, 255, 255, 0.13) 100%);
+	background: linear-gradient(87deg, rgb(0 0 0) -5%, rgb(0 0 0 / 12%) 20%);
 }
 
 /* Containers */
@@ -73,8 +74,12 @@ h3 {
 	margin: 0 auto;
 }
 
+.text--title {
+	font-size: 55px;
+}
+
 .container--spaced {
-	padding: 2rem 3rem;
+	padding: 4rem 3rem;
 }
 
 .container--lg {
@@ -105,4 +110,16 @@ h3 {
 .text-terms {
 	font-size: 12px;
 	color: #969696;
+}
+
+@media screen and (max-width: 768px) {
+	.container {
+		padding: 3rem 10px;
+	}
+	p {
+		font-size: var(--text-sm);
+	}
+	.text--title {
+		font-size: 40px;
+	}
 }

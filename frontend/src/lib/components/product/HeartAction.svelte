@@ -16,7 +16,7 @@
 		top: 12px;
 		right: 12px;
 		background-color: transparent;
-		backdrop-filter: blur(20px);
+		// backdrop-filter: blur(20px);
 		border-radius: 50%;
 		// width:  35px;
 		// height: 35px;

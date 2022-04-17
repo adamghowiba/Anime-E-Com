@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	type ButtonColor = 'white' | 'black' | 'gray' | "blue";
+	type ButtonColor = 'white' | 'black' | 'gray' | 'blue' | 'transparent';
 	type ButtonSize = 'small' | 'base' | 'large';
 	type JustifyContent = 'center' | 'space-between';
 
 	export let outlined: boolean = false;
 	export let href: string = null;
 	export let icon: string = 'bi:arrow-down';
+	export let flipIcon: boolean = false;
 	export let hover: boolean = true;
 	export let disabled: boolean = false;
 
@@ -21,6 +22,7 @@
 
 <div
 	style:border
+	class:flipIcon
 	class="wrapper {buttonColor} {size}"
 	style="--width: {width}; --margin: {margin}; --justify: {justify}"
 >
@@ -56,6 +58,11 @@
 <style lang="scss">
 	.wrapper {
 		width: var(--width);
+
+		&.flipIcon a,
+		&.flipIcon button {
+			flex-direction: row-reverse;
+		}
 	}
 	button {
 		appearance: none;
@@ -80,8 +87,6 @@
 		transition: background-color 0.15s linear, color 0.15s linear;
 
 		&:hover {
-			background-color: black;
-			color: white;
 			cursor: pointer;
 		}
 
@@ -111,6 +116,12 @@
 		font-size: 12px;
 	}
 
+	.transparent button,
+	.transparent a {
+		font-weight: var(--fw-medium);
+		background-color: transparent;
+	}
+
 	/* Color Varients */
 	.black button,
 	.black a {
@@ -128,6 +139,7 @@
 	.white a {
 		background-color: white;
 		color: black;
+		border: 1px solid white;
 
 		&.outlined::before {
 			border-color: white;
@@ -136,11 +148,7 @@
 		&.hover:hover {
 			background-color: black;
 			color: white;
-		}
-
-		&.outlined:hover::before {
-			transform: translate(0, 0);
-			border-color: black;
+			border: 1px solid white;
 		}
 	}
 
@@ -158,13 +166,13 @@
 
 	.blue button,
 	.blue a {
-		background-color: #007DB5;
-		border: 1px solid #007DB5;
+		background-color: #007db5;
+		border: 1px solid #007db5;
 		color: white;
 
 		&.hover:hover {
 			background-color: white;
-			color: #007DB5;
+			color: #007db5;
 		}
 	}
 

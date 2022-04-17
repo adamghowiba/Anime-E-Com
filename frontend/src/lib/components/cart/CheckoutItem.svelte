@@ -30,7 +30,9 @@
 </script>
 
 <div class="item">
-	<img class="item__image" src={thumbnail} alt="" style="--imgSize: {imgSize};" />
+	<a href="" class="item__image">
+		<img src={thumbnail} alt="" style="--imgSize: {imgSize};" />
+	</a>
 
 	<div class="info">
 		<div class="info__header">
@@ -41,15 +43,13 @@
 		<div class="info__variants">
 			{#if selectedOptions}
 				{#each selectedOptions as option}
-					<span>{option.group_name}: {option.option_name}</span>
+					<span class="variant"> <span class="variant-group">{option.group_name}:</span> {option.option_name}</span>
 				{/each}
 			{/if}
 			<span>QTY: {quantity}</span>
 		</div>
 
 		<div class="info__actions">
-			<button>Edit</button>
-			<span>|</span>
 			<button on:click={handleAddToWishlist}>Move To Wishlist</button>
 			<span>|</span>
 			<button on:click={removeFromCart}>Remove</button>
@@ -110,17 +110,80 @@
 		border: 1px solid var(--color-gray-s2);
 		min-height: 120px;
 
-		span {
+		img {
+			max-width: 100%;
 			display: block;
+		}
+
+		span {
 			// font-size: var(--text-sm);
 			text-transform: capitalize;
 		}
 
 		&__image {
-			width: var(--imgSize, 90px);
 			height: 100%;
-			// height: 125px;
-			object-fit: contain;
+			max-width: var(--imgSize, 30%);
+		}
+	}
+
+	@media screen and (max-width: 540px) {
+		.info__price, .info__actions {
+			font-size: 13px ;
+		}
+		.info__variants {
+			flex-direction: row;
+
+			.variant::after {
+				content: ' /';
+			}
+		}
+
+		.variant-group {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		.item__image {
+			padding-top: 0.8rem;
+		}
+
+		.item {
+			border: none;
+		}
+
+		.info {
+			gap: 7px;
+			padding: 0.8rem;
+
+			&__header {
+				gap: inherit;
+				flex-direction: column;
+			}
+			&__variants {
+				gap: inherit;
+				font-size: 13px;
+			}
+
+			h5 {
+				font-size: 16px;
+			}
+
+			&__actions {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 5px;
+
+				span {
+					display: none;
+				}
+			}
+		}
+
+		.item__image,
+		img {
+			min-width: 80px;
+			min-height: 80px;
 		}
 	}
 </style>

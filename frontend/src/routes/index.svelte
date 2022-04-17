@@ -12,24 +12,14 @@
 </script>
 
 <Hero
-	title="Find your impossible"
-	subtitle="You don't have to tell us what's possible.
-
-We are well aware."
+	title="Minimal anime clothing."
+	subtitle="Original art, artist owened, worldwide shipping."
+	images={['dj_orange.jpg', 'leet_green.jpg', 'atsuko_shirts.jpg', 'atsuko_people.jpg', 'demon_slayer.jpg']}
 	button={{ link: '', text: 'shop' }}
-	imgSrc="/images/atsuko_people.jpg"
 />
 <div class="invert" bind:this={invertElement} />
 
 <FeaturedProducts title="New releases" subtitle="mens" button={{ link: '/', name: 'View All' }}>
-	<ProductCard
-		thumbnail="/images/products/gym_shark.jpg"
-		price={42}
-		title="Anti-Magic Hoodie"
-		features={['Mineral', 'paige pink']}
-		permaLink=""
-		newItem
-	/>
 	<ProductCard
 		thumbnail="/images/products/lone_wolf.jpg"
 		price={42}
@@ -42,6 +32,14 @@ We are well aware."
 		thumbnail="/images/products/numa.jpg"
 		price={42}
 		title="Do You Jest Hoodie"
+		features={['Mineral', 'paige pink']}
+		permaLink=""
+		newItem
+	/>
+	<ProductCard
+		thumbnail="/images/products/gon_zilla.jpg"
+		price={42}
+		title="Anti-Magic Hoodie"
 		features={['Mineral', 'paige pink']}
 		permaLink=""
 		newItem
@@ -80,15 +78,15 @@ We are well aware."
 
 <FeaturedProducts title="BEST OF ANIME" button={{ link: '/', name: 'View All' }}>
 	<ProductCard
-		thumbnail="/images/products/gym_shark.jpg"
+		thumbnail="/images/products/lone_wolf.jpg"
 		price={42}
 		title="Anti-Magic Hoodie"
 		features={['Mineral', 'paige pink']}
 		permaLink=""
 		newItem
-		/>
-		<ProductCard
-		thumbnail="/images/products/lone_wolf.jpg"
+	/>
+	<ProductCard
+		thumbnail="/images/products/gon_zilla.jpg"
 		price={42}
 		title="All Alone Tee"
 		features={['Mineral', 'paige pink']}
@@ -118,7 +116,7 @@ We are well aware."
 		title="MINIMAL ANIME STYLE"
 		subtitle="New styles, max comfort"
 		button={{ link: '', text: 'shop' }}
-		imgSrc="/images/demon_slayer.jpg"
+		imgSrc="demon_slayer.jpg"
 		contentAlign="btm-center"
 		height={60}
 	/>
@@ -134,7 +132,7 @@ We are well aware."
 		title="MINIMAL ANIME STYLE"
 		subtitle="New styles, max comfort"
 		button={{ link: '', text: 'shop' }}
-		imgSrc="/images/attack_titan.jpg"
+		imgSrc="attack_titan.jpg"
 		contentAlign="btm-center"
 		height={60}
 	/>
@@ -147,8 +145,7 @@ We are well aware."
 		grid-template-columns: 1fr 1fr;
 		grid-template-rows: 40vh 40vh;
 		gap: 10px;
-		padding-left: 0;
-		padding-right: 0;
+		padding: 0;
 		// overflow-y: hidden;
 
 		&__large {
@@ -157,6 +154,6 @@ We are well aware."
 		}
 	}
 	.hero-section {
-		margin-top: 3rem;
+		// margin-top: 4rem;
 	}
 </style>

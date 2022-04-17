@@ -40,27 +40,50 @@
 		</h6>
 
 		<div class="options__block">
-			<RadioGroup bind:value={selectedVariants[group.name]}>
-				{#each group.options as option}
-					<RadioInput
-						name="size"
-						value={parseSelectedVariant(group, option)}
-						border={!isColorGroup}
-						selectEffect={isColorGroup ? 'border' : 'fill'}
-						hoverable={!isColorGroup}
-					>
-						{#if option.assets.length >= 1}
-							<img
-								class="options__image"
-								src={productData.assets.filter((asset) => option.assets.includes(asset.id))[0]?.url}
-								alt=""
-							/>
-						{:else}
-							{option.name.toUpperCase()}
-						{/if}
-					</RadioInput>
-				{/each}
-			</RadioGroup>
+			{#if isColorGroup}
+				<RadioGroup bind:value={selectedVariants[group.name]} width="auto">
+					<div class="options__color-wrap">
+						{#each group.options as option}
+							<RadioInput
+								name="size"
+								value={parseSelectedVariant(group, option)}
+								border={!isColorGroup}
+								height="auto"
+								selectEffect={isColorGroup ? 'border' : 'fill'}
+								hoverable={!isColorGroup}
+							>
+								{#if option.assets.length >= 1}
+									<img
+										class="options__image"
+										src={productData.assets.filter((asset) => option.assets.includes(asset.id))[0]
+											?.url}
+										alt=""
+									/>
+								{:else}
+									{option.name.toUpperCase()}
+								{/if}
+							</RadioInput>
+						{/each}
+					</div>
+				</RadioGroup>
+			{:else}
+				<RadioGroup bind:value={selectedVariants[group.name]} width="100%">
+					{#each group.options as option}
+						<div class="options__item">
+							<RadioInput
+								name="size"
+								value={parseSelectedVariant(group, option)}
+								border={!isColorGroup}
+								width="100%"
+								selectEffect="fill"
+								hoverable
+							>
+								{option.name.toUpperCase()}
+							</RadioInput>
+						</div>
+					{/each}
+				</RadioGroup>
+			{/if}
 		</div>
 	</div>
 {/each}
@@ -73,11 +96,18 @@
 
 		&__block {
 			display: flex;
-			gap: 7px;
+			width: 100%;
+		}
+
+		&__color-wrap {
+			display: flex;
+			gap: inherit;
+			flex-wrap: wrap;
 		}
 
 		&__image {
 			height: auto;
+			width: 75px;
 		}
 
 		h6 {
@@ -89,5 +119,17 @@
 	.gray {
 		color: #6e6e6e;
 		text-transform: capitalize;
+	}
+
+	@media screen and (max-width: 768px) {
+		.options {
+			&__item {
+				width: 100%;
+			}
+
+			&__block {
+				width: 100%;
+			}
+		}
 	}
 </style>

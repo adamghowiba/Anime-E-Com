@@ -5,17 +5,26 @@
 	import NavDropdown from './NavDropdown.svelte';
 	import { fade } from 'svelte/transition';
 	import DropdownGroup from './DropdownGroup.svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { cartCount } from '$lib/stores/cart-store';
 	import { beforeNavigate } from '$app/navigation';
+	import { gsap, Power3 } from 'gsap';
 
 	export let minimized: boolean = false;
 
 	let iconSize = 25;
-	let activeNavLink: typeof NAV_LINKS[number];
+	let activeNavLink: typeof NAV_LINKS[number] = 'Brands';
 	let dropdown = false;
 
-	const NAV_LINKS = ['shop', 'series', 'accessories'] as const;
+	let hoverImages: string[] = [
+		'/atsuko_shirts.jpg',
+		'/products/add_black.jpg',
+		'/products/gym_shark.jpg'
+	];
+
+	let activeHoverImageIndex = 0;
+
+	const NAV_LINKS = ['shop', 'Brands', 'accessories'] as const;
 
 	const dispatch = createEventDispatcher();
 
@@ -26,7 +35,7 @@
 	}
 
 	const linkWrapMouseLeave = (event: MouseEvent) => {
-		closeNavbar();
+		// closeNavbar();
 	};
 
 	const linkMouseEnter = (event: MouseEvent) => {
@@ -42,6 +51,58 @@
 	beforeNavigate(() => {
 		closeNavbar();
 	});
+
+	type EnterDirection = 'left' | 'right' | 'bottom' | 'top';
+	let stackingOrder = 0;
+
+	function getMouseEnterDirection(event: MouseEvent): EnterDirection {
+		const { offsetX, offsetY } = event;
+		const target = event.target as HTMLElement;
+
+		if (offsetY < 0) return 'top';
+		if (offsetY >= target.clientHeight) return 'bottom';
+
+		if (offsetX <= 0) return 'left';
+		if (offsetX >= target.clientWidth - 10) return 'right';
+	}
+
+	function getAnimationTransform(direction: EnterDirection) {
+		if (direction === 'top') return { height: 0, top: 0 };
+		if (direction === 'bottom') return { height: 0, bottom: 0 };
+		if (direction === 'left') return { width: 0, left: 0 };
+		if (direction === 'right') return { width: 0, right: 0 };
+	}
+
+	function playTween(direction: EnterDirection, imageIndex: string) {
+		gsap.set(`#dropdown__image--${imageIndex}`, {
+			zIndex: ++stackingOrder,
+			left: 'unset',
+			right: 'unset',
+			top: 'unset',
+			bottom: 'unset'
+		});
+
+		gsap.fromTo(
+			`#dropdown__image--${imageIndex}`,
+			{ ...getAnimationTransform(direction) },
+			{
+				width: '100%',
+				height: '100%',
+				duration: 0.85,
+				ease: Power3.easeInOut
+			}
+		);
+	}
+
+	function handleMouseEnter(event: MouseEvent) {
+		const target = event.target as HTMLElement;
+		const imageIndex = target.dataset.index;
+		if (parseInt(imageIndex) === activeHoverImageIndex) return;
+
+		let enterDirection = getMouseEnterDirection(event);
+		playTween(enterDirection, imageIndex);
+		activeHoverImageIndex = parseInt(imageIndex);
+	}
 </script>
 
 <div class="nav__wrapper" class:minimized>
@@ -68,13 +129,28 @@
 			{/each}
 
 			{#if dropdown && activeNavLink}
-				<div class="nav__dropdown" transition:fade={{ duration: 50 }}>
+				<div class="dropdown" transition:fade={{ duration: 50 }}>
 					{#if activeNavLink == 'shop'}
 						<NavDropdown>
 							<DropdownGroup title="Trending">
-								<a href="/collections/all-products">All products</a>
-								<a href="/collections/new-releases">New Releases</a>
-								<a href="/collections/best-sellers">Best Sellers</a>
+								<a
+									href="/collections/all-products"
+									id="nav-link"
+									data-index={0}
+									on:mouseenter={handleMouseEnter}>All products</a
+								>
+								<a
+									href="/collections/new-releases"
+									id="nav-link"
+									data-index={1}
+									on:mouseenter={handleMouseEnter}>New Releases</a
+								>
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>Best Sellers</a
+								>
 							</DropdownGroup>
 
 							<DropdownGroup title="Products">
@@ -82,17 +158,99 @@
 								<a href="/collections/hoodies">Hoodies</a>
 							</DropdownGroup>
 
-							<DropdownGroup title="Collections">
-								<a href="/">Attack On Titan</a>
-								<a href="/">Demon Slayer</a>
-								<a href="/">Naurto</a>
-								<a href="/">Death Note</a>
+							<div class="dropdown__image-wrap">
+								{#each hoverImages as image, i}
+									<img
+										id="dropdown__image--{i}"
+										class="dropdown__image"
+										src="/images/{image}"
+										alt=""
+									/>
+								{/each}
+							</div>
+						</NavDropdown>
+					{:else if activeNavLink == 'Brands'}
+						<NavDropdown>
+							<DropdownGroup title="Trending">
+								<a
+									href="/collections/all-products"
+									id="nav-link"
+									data-index={0}
+									on:mouseenter={handleMouseEnter}>Attack On Titan</a
+								>
+								<a
+									href="/collections/new-releases"
+									id="nav-link"
+									data-index={1}
+									on:mouseenter={handleMouseEnter}>Bleach</a
+								>
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>Death Note</a
+								>
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>Demon Slayer</a
+								>
+
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>Dragon Ball Z</a
+								>
+
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>Hunter x Hunter</a
+								>
+
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>My Hero Academia</a
+								>
+
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>Naruto Shippuden</a
+								>
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>One Piece</a
+								>
+								<a
+									href="/collections/best-sellers"
+									id="nav-link"
+									data-index={2}
+									on:mouseenter={handleMouseEnter}>One Punch Man</a
+								>
+
+								<div class="dropdown__image-wrap">
+									{#each hoverImages as image, i}
+										<img
+											id="dropdown__image--{i}"
+											class="dropdown__image"
+											src="/images/{image}"
+											alt=""
+										/>
+									{/each}
+								</div>
 							</DropdownGroup>
 						</NavDropdown>
-					{:else if activeNavLink == 'series'}
-						<NavDropdown>Series Items</NavDropdown>
 					{:else if activeNavLink == 'accessories'}
-						<NavDropdown>Accessoreis Items</NavDropdown>
+						<NavDropdown>Coming Sooon...</NavDropdown>
 					{/if}
 				</div>
 			{/if}
@@ -125,6 +283,35 @@
 </div>
 
 <style lang="scss">
+	.dropdown {
+		position: absolute;
+		width: 100%;
+		bottom: -1px;
+		transform: translateY(100%);
+
+		&__image {
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+			position: absolute;
+		}
+
+		&__image-wrap {
+			position: relative;
+			width: 250px;
+		}
+
+		#nav-link {
+			display: block;
+		}
+
+		a {
+			transition: opacity 0.15s ease-out;
+		}
+		a:hover {
+			opacity: 0.7;
+		}
+	}
 	.nav__wrapper {
 		position: fixed;
 		top: 0;
@@ -194,13 +381,6 @@
 			display: flex;
 			justify-self: flex-end;
 			gap: 1rem;
-		}
-
-		&__dropdown {
-			position: absolute;
-			width: 100%;
-			bottom: -1px;
-			transform: translateY(100%);
 		}
 
 		&__heart-action:hover {

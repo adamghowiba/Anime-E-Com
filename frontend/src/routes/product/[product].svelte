@@ -19,7 +19,8 @@
 		const productData = await commerce.products.retrieve(permaLink, { type: 'permalink' });
 
 		/* Fail if the product has no sizes */
-		if (!isValidProduct(productData)) return { status: 400, error: new Error('Invalid Product- Incomplete') };
+		if (!isValidProduct(productData))
+			return { status: 400, error: new Error('Invalid Product- Incomplete') };
 
 		/* TODO Handle Error for not found product */
 		console.log(productData);
@@ -35,6 +36,7 @@
 <script lang="ts">
 	import ProductOptions from '$lib/components/product-page/ProductOptions.svelte';
 	import { onMount } from 'svelte';
+	import { session } from '$app/stores';
 
 	export let productData: Product;
 
@@ -67,12 +69,9 @@
 		selectedVariants?.color?.assets?.length > 0
 			? [...selectedVariants.color.assets.map((asset) => asset.url)]
 			: [...productData.assets.map(({ url }) => url)];
-
-	/* TODO: Remove Console Logs */
-	console.log(productData);
 </script>
 
-<header class="container container--lg">
+<header class="breadcrumbs container container--lg">
 	<Breadcrumbs
 		history={[
 			{ href: '', name: 'Men' },
@@ -81,12 +80,17 @@
 	/>
 </header>
 
+<div class="mobile-title container container--lg">
+	<h3 class="title">{productData.name}</h3>
+	<h5 class="price">${productData.price.raw}</h5>
+</div>
+
 <section class="product container container--lg">
 	<ProductSlider images={selectedColorImages} />
 
 	<div class="details" class:extraTopSpace={!$navbarMinimzed}>
-		<h3 class="details__title">{productData.name}</h3>
-		<h5 class="details__price">${productData.price.raw}</h5>
+		<h3 class="title">{productData.name}</h3>
+		<h5 class="price">${productData.price.raw}</h5>
 
 		<ProductOptions {productData} bind:selectedVariants />
 
@@ -134,6 +138,9 @@
 		display: grid;
 		grid-template-columns: 1fr 0.5fr;
 		padding-bottom: 5rem;
+		padding-top: 0;
+		padding-left: 0;
+		padding-right: 0;
 	}
 
 	.details {
@@ -148,18 +155,6 @@
 
 		&.extraTopSpace {
 			top: calc(5rem + 35px);
-		}
-
-		&__title {
-			max-width: 15ch;
-			// margin-bottom: 2.5rem;
-			text-transform: capitalize;
-			font-weight: var(--fw-regular);
-			line-height: 1.3;
-		}
-
-		&__price {
-			font-weight: var(--fw-semibold);
 		}
 
 		&__actions {
@@ -184,6 +179,71 @@
 		&__actions-save:hover {
 			background-color: var(--color-gray-s2);
 			cursor: pointer;
+		}
+	}
+
+	.title {
+		max-width: 15ch;
+		text-transform: capitalize;
+		font-weight: var(--fw-regular);
+		line-height: 1.3;
+	}
+
+	.price {
+		font-weight: var(--fw-semibold);
+	}
+
+	.mobile-title {
+		display: none;
+	}
+
+	/* Laptop */
+	@media screen and (max-width: 1024px) {
+		.product {
+			grid-template-columns: 1fr 0.8fr;
+		}
+		.title {
+			font-size: var(--text-lg);
+		}
+	}
+
+	/* Tablet */
+	@media screen and (max-width: 768px) {
+		.product {
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr 1fr;
+			gap: 2.5rem;
+			padding: 0;
+		}
+		.breadcrumbs {
+			padding-top: 30px;
+			padding-bottom: 30px;
+			margin: 0;
+		}
+		.mobile-title {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			padding-top: 0;
+			padding-bottom: 25px;
+		}
+		.title {
+			max-width: 20ch;
+		}
+
+		.details {
+			padding: 0 1rem;
+			position: relative;
+			top: 0;
+
+			.title,
+			.price {
+				display: none;
+			}
+
+			&.extraTopSpace {
+				top: 0;
+			}
 		}
 	}
 </style>

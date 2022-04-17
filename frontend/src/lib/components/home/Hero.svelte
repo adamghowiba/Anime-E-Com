@@ -3,42 +3,44 @@
 	import type { ContentAlign } from '$lib/types/types';
 	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
 	import { gsap, Power3 } from 'gsap';
+	import { fade } from 'svelte/transition';
 
 	export let title: string;
 	export let subtitle: string;
 	export let button: { link: string; text: string };
 	export let height: number = 80;
 	export let videoSrc: string = null;
-	export let imgSrc: string = null;
 	export let contentAlign: ContentAlign = 'left';
+	export let imgSrc: string = null;
+
+	export let images: string[] = [];
 
 	let activeSliderIndex: number = 0;
 	let controlActiveBlock: HTMLElement;
-
-	let images = ['atsuko_people.jpg', 'attack_titan.jpg', 'atsuko_shirts.jpg', 'demon_slayer.jpg'];
-	let imageIndexFlipped: boolean = false;
-
-	let firstImageIndex = 0;
-	let secondImageIndex = 1;
 
 	function handleControlClick(index: number) {
 		let controlBlockSize = 60;
 		controlActiveBlock.style.transform = `translateX(${index * controlBlockSize}px)`;
 		activeSliderIndex = index;
-		console.log('Changed index', index);
 	}
-	const timeline = gsap.timeline();
+
+	$: isSlider = images.length > 0;
 </script>
 
-<div class="hero {contentAlign}" style="--height: {height}vh">
+<div class="hero  {contentAlign}" style="--height: {height}vh">
 	{#if videoSrc}
 		<video autoplay loop muted>
 			<source src={videoSrc} type="video/mp4" />
 			<img src="/images/attack_titan.jpg" alt="" />
 			<div class="overlay overlay--fade" />
 		</video>
-	{:else if imgSrc}
-		<img class="first-image" src="/images/{images[activeSliderIndex]}" alt="" />
+	{:else if imgSrc || isSlider}
+		<img
+			class="first-image"
+			src="/images/{images[activeSliderIndex] || imgSrc}"
+			alt=""
+			transition:fade|local
+		/>
 		<div class="overlay overlay--fade" />
 	{/if}
 
@@ -46,18 +48,20 @@
 		<HeaderBlock {title} {subtitle} {button} {contentAlign} color="white" />
 	</div>
 
-	<div class="controls">
-		<div class="controls__active-block" bind:this={controlActiveBlock} />
-		{#each Array(4) as _, i}
-			<div
-				class="controls__action"
-				on:click={() => handleControlClick(i)}
-				class:active={activeSliderIndex == i}
-			>
-				0{i + 1}
-			</div>
-		{/each}
-	</div>
+	{#if isSlider}
+		<div class="controls">
+			<div class="controls__active-block" bind:this={controlActiveBlock} />
+			{#each Array(4) as _, i}
+				<div
+					class="controls__action"
+					on:click={() => handleControlClick(i)}
+					class:active={activeSliderIndex == i}
+				>
+					0{i + 1}
+				</div>
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style lang="scss">
@@ -127,8 +131,6 @@
 	}
 	.hero {
 		position: relative;
-		// height: 80vh;
-		// margin: 2rem 0;
 
 		img,
 		video {
@@ -140,7 +142,7 @@
 
 		&__content {
 			padding: 0 3rem;
-			max-width: 40ch;
+			max-width: 50ch;
 			position: absolute;
 		}
 
@@ -162,5 +164,11 @@
 			transform: translateX(-50%);
 			text-align: center;
 		}
+	}
+
+	@media screen and (max-width: 425px) {
+		.hero__content {
+			padding: 0 1rem;
+		}	
 	}
 </style>
