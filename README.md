@@ -8,7 +8,7 @@ A fully featured completely custom Svelte eCommerce site made with CommerceJS, S
 
 ## 💻 Demo
 
-**COMING SOON.....**
+**https://anime-e-com.vercel.app/**
 
 <img src="https://webrevived.s3.amazonaws.com/images/localhost3000+(1).jpg" alt="drawing" style="width:500px;"/>
 <!-- ![Home Page Screenshot](https://webrevived.s3.amazonaws.com/images/MacBook+Pro+16.png) -->
