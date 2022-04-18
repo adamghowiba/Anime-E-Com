@@ -117,15 +117,15 @@
 	const formData: CheckoutData = {
 		delivery: {
 			shipping_address: {
-				first_name: 'Adam',
-				last_name: 'Ghowiba',
-				street: '1020 Waverly Dr.',
-				city: 'Longwood',
-				state: 'FL',
+				first_name: '',
+				last_name: '',
+				street: '',
+				city: '',
+				state: '',
 				zip: ''
 			},
-			email: 'adamware99@hotmail.com',
-			phone: '4079246902'
+			email: '',
+			phone: ''
 		},
 		billing_address: {
 			first_name: '',

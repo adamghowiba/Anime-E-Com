@@ -11,22 +11,24 @@
 
 	/* TODO: Show tooltip for color hover */
 	function setFirstColorOption() {
-		const colorVariant = productData.variant_groups.find(
-			(variant) => variant.name.toLowerCase() === 'color'
-		);
+		// const colorVariant = productData.variant_groups.find(
+		// 	(variant) => variant.name.toLowerCase() === 'color'
+		// );
 
-		if (!colorVariant) return;
+		// if (!colorVariant) return;
 
-		selectedVariants.color = transformSelectedVariants(
-			colorVariant,
-			colorVariant.options[0],
-			productData.assets
-		);
+		// selectedVariants.color = transformSelectedVariants(
+		// 	colorVariant,
+		// 	colorVariant.options[0],
+		// 	productData.assets
+		// );
 	}
 
 	onMount(() => {
-		setFirstColorOption();
+		// setFirstColorOption();
 	});
+
+	$: console.log(selectedVariants);
 </script>
 
 {#each productData.variant_groups as group}
@@ -42,13 +44,13 @@
 			{#if isColorGroup}
 				<RadioGroup bind:value={selectedVariants[group.name.toLowerCase()]} on:select width="auto">
 					<div class="options__color-wrap">
-						{#each group.options as option}
+						{#each group.options as option, i}
 							{@const hasAssets = option.assets.length > 0}
 
 							<RadioInput
 								name="size"
 								value={transformSelectedVariants(group, option, productData.assets)}
-								selected={option.id === selectedVariant?.option_id}
+								selected={i === 0}
 								borderColor={hasAssets ? 'transparent' : 'black'}
 								height="auto"
 								selectEffect={hasAssets ? 'border' : 'fill'}

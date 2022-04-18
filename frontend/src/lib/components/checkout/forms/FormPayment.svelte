@@ -45,9 +45,15 @@
 
 	<div class="form-group__subgroup">
 		<h5>Enter your payment details</h5>
-		<TextInput name="test" placeholder="Name on card" required size="large" value="Adam Ghowiba" />
-		<TextInput name="test" placeholder="Card number" size="large" required value="4242424 424 24 2424" />
-		<TextInput name="test" placeholder="Address" size="large" required value="1020 Waverly Dr." />
+		<TextInput name="test" placeholder="Name on card" required size="large" value="Jane Doe" />
+		<TextInput
+			name="test"
+			placeholder="Card number"
+			size="large"
+			required
+			value="4242424 424 24 2424"
+		/>
+		<TextInput name="test" placeholder="Address" size="large" required value="123 Wallaby Way." />
 		<span class="text-terms"
 			>I have read and consent to eShopWorld processing my information in accordance with the
 			Privacy Statement and Cookie Policy.

@@ -15,12 +15,14 @@
 	export let selected: boolean = false;
 
 	const { setSelectedValue, selectedValue } = getContext('select');
+
+	$: if (selected) setSelectedValue(value);
 </script>
 
 <label
 	class="radio selected--{selectEffect} hover--{hoverEffect}"
 	style="--width: {width}; --height: {height};"
-	class:selected={$selectedValue === value || selected}
+	class:selected={$selectedValue === value}
 	style:border={border ? `1px solid ${borderColor}` : 'none'}
 	on:mouseenter
 	on:click={() => setSelectedValue(value)}
@@ -38,7 +40,7 @@
 		min-width: 71px;
 		min-height: 48px;
 		height: var(--height);
-		// width: var(--width);
+		width: var(--width);
 		border: 1px solid black;
 		transition: background-color 0.085s linear, color 0.085s linear, border-color 0.15s ease-out;
 

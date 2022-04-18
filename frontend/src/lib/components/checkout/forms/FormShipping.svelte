@@ -12,8 +12,6 @@
 	export let shippingMethod: ShippingMethod[];
 
 	$: isFormCompleted = Boolean(checkoutData.id);
-
-	$: console.log(checkoutData);
 </script>
 
 <div class="form-group">
@@ -21,15 +19,15 @@
 		<h5>When would you like to get your order?</h5>
 		{#if shippingMethod}
 			<RadioGroup bind:value={checkoutData}>
-				{#each shippingMethod as method}
+				{#each shippingMethod as method, i}
 					<RadioInput
 						name="test"
 						value={method}
 						width="100%"
-						hoverable={false}
+						hoverEffect="none"
 						selectEffect="border"
 						border={true}
-						borderColor="var(--color-gray-s1)"
+						selected={i === 0}
 					>
 						<InfoBlock title={method.description} desc="Arrives Apr 16 - Apr 19" padding="5px">
 							{method.price.formatted_with_symbol}
