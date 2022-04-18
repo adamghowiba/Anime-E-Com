@@ -3,7 +3,9 @@
 
 A fully featured completely custom Svelte eCommerce site made with CommerceJS, SvelteKit & ❤️
 
-
+🔓 Anime-E-Com is free and open source. Download and modify it the way you want
+🛒 Most of the essential features for ecommerce are already integrated
+🖼️ UX / UI inspration from the top eCommerce sites.
 
 
 ## 💻 Demo
@@ -16,14 +18,24 @@ A fully featured completely custom Svelte eCommerce site made with CommerceJS, S
 
 ## Features
 
-- Fully featured cart
-- Checkout flow
-- Product pages
-- Product filtering
-- Wishlist
+- SvelteKit for routing
+- Typescript for peace of mind
+- SCSS
+- Headless API intergration
+- Lazy loading images
+- Animations 
+- Login
 - Account mangement
-- Order tracking
-- Stripe intergration
+- Cart & Checkout
+- Stores
+- Carousel (Slider)
+- Toasts (Notifications)
+- Loading Indicators
+- Componentized
+- Instant Search
+- Filtering / Sorting
+- Skeletons
+- Responsive
 
 ## Tech Stack
 
@@ -32,6 +44,9 @@ A fully featured completely custom Svelte eCommerce site made with CommerceJS, S
 - [CommerceJS](https://commercejs.com/)
 - SCSS 
 
+## Contributing
+
+If you like the ideas behind Svelte Commerce and want to become a contributor - join github discussions, check the list of the active issues or contact me directly via [adam@webrevived.com](mailto:adam@webrevived.com)
 
 ## Feedback
 
