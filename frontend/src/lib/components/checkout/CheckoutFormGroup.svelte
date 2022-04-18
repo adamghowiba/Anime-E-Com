@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import { quadOut, quintOut, quartOut } from 'svelte/easing';
 	export let title: string;
 	export let isActive: boolean = false;
 	export let isCompleted: boolean = false;
@@ -36,6 +35,7 @@
 			color: #969696;
 			transition: color 0.15s linear;
 			font-size: 25px;
+			text-transform: capitalize;
 		}
 
 		&.isActive h4,

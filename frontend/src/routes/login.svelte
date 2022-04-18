@@ -14,8 +14,8 @@
 	<h5>Login to your account</h5>
 
 	<form>
-		<TextInput name="email" label="Email address" type="email" bind:value={username} />
-		<TextInput name="password" label="Password" type="password" bind:value={username} />
+		<TextInput name="email" placeholder="Email Address" type="email" bind:value={username} />
+		<TextInput name="password" placeholder="Password" type="password" bind:value={username} />
 		<Button buttonColor="black" width="100%">LOG IN</Button>
 	</form>
 
@@ -25,7 +25,6 @@
 		New To Anime Store
 		<a href="/register" class="create-account">Create an account </a>
 	</span>
-
 </section>
 
 <style lang="scss">

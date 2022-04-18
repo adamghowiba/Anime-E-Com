@@ -8,6 +8,7 @@
 	import InfoBlock from '../InfoBlock.svelte';
 
 	// export let deliveryData: Delivery;
+	export let onCheckout: () => void;
 	let formComplete: boolean = false;
 	let formElement: HTMLFormElement;
 
@@ -60,7 +61,7 @@
 		</span>
 	</div>
 
-	<SquareButton width="100%" outlined disabled={!formComplete} size="small" on:click>
+	<SquareButton width="100%" outlined disabled={!formComplete} size="small" on:click={() => onCheckout()}>
 		Place Order
 	</SquareButton>
 </form>

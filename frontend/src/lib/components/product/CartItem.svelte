@@ -4,19 +4,23 @@
 	import QuanityTicker from '$lib/components/buttons/QuanityTicker.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { updateQuanitity } from '$lib/commerce/cartUtils';
+	import type { LineItem } from '@chec/commerce.js/types/line-item';
 
-	export let thumbnail: string;
-	export let title: string;
-	export let price: number;
-	export let variants: SelectedVariant[] = [];
-	export let id: string = null;
-	export let productId: string;
-	export let permalink: string;
-	export let quantity: number;
+	export let product: LineItem;
+	// export let thumbnail: string;
+	// export let title: string;
+	// export let price: number;
+	// export let variants: SelectedVariant[] = [];
+	// export let id: string = null;
+	// export let productId: string;
+	// export let permalink: string;
+	// export let quantity: number;
+	export let quantity = product.quantity;
 
 	/* Toggleable UI Elements */
 	export let quantityTicker: boolean = true;
 	export let removeAction: boolean = true;
+	export let divider: boolean = true;
 
 	let updatingQuantity = false;
 
@@ -28,7 +32,7 @@
 		try {
 			updatingQuantity = true;
 
-			const cart = await updateQuanitity(id, --quantity);
+			const cart = await updateQuanitity(product.id, --quantity);
 			dispatch('quantityUpdated', cart.cart.subtotal.formatted_with_symbol);
 		} finally {
 			updatingQuantity = false;
@@ -40,7 +44,7 @@
 
 		try {
 			updatingQuantity = true;
-			const cart = await updateQuanitity(id, ++quantity);
+			const cart = await updateQuanitity(product.id, ++quantity);
 
 			dispatch('quantityUpdated', cart.cart.subtotal.formatted_with_symbol);
 		} finally {
@@ -49,19 +53,19 @@
 	}
 </script>
 
-<div class="item">
-	<img class="item__image" src={thumbnail} alt="" />
+<div class="item" class:divider>
+	<img class="item__image" src={product.image.url} alt="" />
 
 	<div class="item__info">
-		<a class="item__title" href="/product/{permalink}">{title}</a>
+		<a class="item__title" href="/product/{product.permalink}">{product.permalink}</a>
 
 		<div class="item__variants">
-			{#if variants.length >= 1}
-				{#each variants as variant}
+			{#if product.selected_options.length >= 1}
+				{#each product.selected_options as variant}
 					<span>{variant.group_name}: {variant.option_name}</span>
 				{/each}
 			{/if}
-			<span class="item__price">${price}</span>
+			<span class="item__price">{product.price.formatted_with_symbol}</span>
 		</div>
 
 		<div class="item__actions">
@@ -85,8 +89,11 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 1.5rem;
-		padding-bottom: 20px;
-		border-bottom: 1px solid var(--color-gray-s2);
+
+		&.divider {
+			padding-bottom: 20px;
+			border-bottom: 1px solid var(--color-gray-s2);
+		}
 
 		span {
 			display: block;

@@ -1,24 +1,21 @@
 <script lang="ts">
 	import SquareButton from '$lib/components/buttons/SquareButton.svelte';
+	import InfoBlock from '$lib/components/checkout/InfoBlock.svelte';
 	import RadioGroup from '$lib/components/inputs/RadioGroup.svelte';
 	import RadioInput from '$lib/components/inputs/RadioInput.svelte';
-	import InfoBlock from '$lib/components/checkout/InfoBlock.svelte';
-	import TextInput from '$lib/components/inputs/TextInput.svelte';
-	import { onMount } from 'svelte';
-	import { commerce } from '$lib/commerce/commerce';
+	import { checkoutData } from '$lib/stores/checkout-store';
 	import type { ShippingMethod } from '@chec/commerce.js/types/shipping-method';
 
-	export let checkoutData: ShippingMethod;
 	export let shippingMethod: ShippingMethod[];
 
-	$: isFormCompleted = Boolean(checkoutData.id);
+	$: isFormCompleted = Boolean($checkoutData.fulfillment);
 </script>
 
 <div class="form-group">
 	<div class="form-group__subgroup">
 		<h5>When would you like to get your order?</h5>
 		{#if shippingMethod}
-			<RadioGroup bind:value={checkoutData}>
+			<RadioGroup bind:value={$checkoutData.fulfillment}>
 				{#each shippingMethod as method, i}
 					<RadioInput
 						name="test"
@@ -40,9 +37,9 @@
 		{/if}
 	</div>
 
-	<SquareButton width="100%" outlined size="small" on:click disabled={!isFormCompleted}
-		>Continue</SquareButton
-	>
+	<SquareButton width="100%" outlined size="small" on:click disabled={!isFormCompleted}>
+		Continue
+	</SquareButton>
 </div>
 
 <style lang="scss">

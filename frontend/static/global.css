@@ -105,8 +105,43 @@ h3 {
 .form-group__subgroup {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 1rem;
 }
+
+/* Input */
+.input-wrapper {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	font-size: 14px;
+}
+.input-wrapper input,
+.input-wrapper select {
+	outline: none;
+	border: 1px solid var(--color-gray-s1);
+	width: 100%;
+	padding: 12px 12px;
+	font-size: 12px;
+	transition: box-shadow 0.15s ease-out;
+}
+.input-wrapper select:focus, .input-wrapper input:focus {
+	border: 1px solid black;
+	box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
+}
+.input-wrapper.large {
+	gap: 10px;
+	font-size: 16px;
+}
+.input-wrapper.large input,
+.input-wrapper.large select {
+	padding: 16px 12px;
+	font-size: 16px;
+}
+.input-wrapper.large label {
+	font-size: 14px;
+}
+
 .text-terms {
 	font-size: 12px;
 	color: #969696;

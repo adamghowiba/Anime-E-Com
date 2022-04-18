@@ -1,11 +1,20 @@
 <script lang="ts">
 	import Checkbox from '$lib/components/inputs/Checkbox.svelte';
-	import type { Address } from '$lib/types/checkout';
+	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
+	import TextInput from '$lib/components/inputs/TextInput.svelte';
+import { STATES } from '$lib/constant/address';
+	import { checkoutData } from '$lib/stores/checkout-store';
+import { transformStatesToInput } from '$lib/utils/stringUtils';
 	import SquareButton from '../../buttons/SquareButton.svelte';
-	import TextInput from '../../inputs/TextInput.svelte';
 
-	export let billingData: Address;
-	export let billingSameAsShipping: boolean;
+	let billingSameAsShipping: boolean = true;
+
+	$: if (billingSameAsShipping) {
+		$checkoutData.billing = {
+			...$checkoutData.shipping,
+			name: `${$checkoutData.customer.firstname} ${$checkoutData.customer.lastname}`
+		};
+	}
 </script>
 
 <div class="form-group">
@@ -18,20 +27,36 @@
 		<div class="form-group__subgroup">
 			<h5>Enter your name and address</h5>
 			<TextInput
-				name="test"
-				placeholder="First Name"
-				bind:value={billingData.first_name}
+				name="full_name"
+				placeholder="Full Name"
+				size="large"
+				bind:value={$checkoutData.billing.name}
+			/>
+			<TextInput
+				name="street"
+				placeholder="Street"
+				bind:value={$checkoutData.billing.street}
 				size="large"
 			/>
 			<TextInput
-				name="test"
-				placeholder="Last Name"
-				bind:value={billingData.last_name}
+				name="city"
+				placeholder="City"
+				bind:value={$checkoutData.billing.town_city}
 				size="large"
 			/>
-			<TextInput name="test" placeholder="Address" bind:value={billingData.street} size="large" />
-			<TextInput name="test" placeholder="City" bind:value={billingData.city} size="large" />
-			<TextInput name="test" placeholder="State" bind:value={billingData.state} size="large" />
+			<SelectInput
+				name="state"
+				placeholder="Select State"
+				bind:value={$checkoutData.shipping.county_state}
+				size="large"
+				values={transformStatesToInput(STATES)}
+			/>
+			<TextInput
+				name="zip_code"
+				placeholder="Zip Code"
+				bind:value={$checkoutData.billing.postal_zip_code}
+				size="large"
+			/>
 		</div>
 	{/if}
 

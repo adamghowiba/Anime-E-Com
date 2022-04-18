@@ -1,13 +1,16 @@
 <script lang="ts">
-	import type { Delivery } from '$lib/types/checkout';
-import { onMount } from 'svelte';
+	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
+	import { STATES } from '$lib/constant/address';
+	import { checkoutData } from '$lib/stores/checkout-store';
+	import { transformStatesToInput } from '$lib/utils/stringUtils';
+	import { onMount } from 'svelte';
 	import SquareButton from '../../buttons/SquareButton.svelte';
 	import TextInput from '../../inputs/TextInput.svelte';
 
-	export let deliveryData: Delivery;
 	let formComplete: boolean = false;
 	let formElement: HTMLFormElement;
 
+	/* TODO Escaping text after disabled button and typing doesn't fix it. */
 	function verifyFormCompleted() {
 		if (!formElement.checkValidity()) {
 			return (formComplete = false);
@@ -17,7 +20,9 @@ import { onMount } from 'svelte';
 
 	onMount(() => {
 		verifyFormCompleted();
-	})
+	});
+
+	$: $checkoutData.shipping.name = `${$checkoutData.customer.firstname} ${$checkoutData.customer.lastname}`;
 </script>
 
 <form
@@ -29,59 +34,67 @@ import { onMount } from 'svelte';
 	<div class="form-group__subgroup">
 		<h5>Enter your name and address</h5>
 		<TextInput
-			name="test"
+			name="first_name"
 			placeholder="First Name"
 			required
 			size="large"
-			bind:value={deliveryData.shipping_address.first_name}
+			bind:value={$checkoutData.customer.firstname}
 		/>
 		<TextInput
-			name="test"
+			name="last_name"
 			placeholder="Last Name"
 			size="large"
 			required
-			bind:value={deliveryData.shipping_address.last_name}
+			bind:value={$checkoutData.customer.lastname}
 		/>
 		<TextInput
-			name="test"
-			placeholder="Address"
+			name="street"
+			placeholder="Street"
 			size="large"
 			required
-			bind:value={deliveryData.shipping_address.street}
+			bind:value={$checkoutData.shipping.street}
 		/>
 		<TextInput
-			name="test"
+			name="city"
 			placeholder="City"
 			size="large"
 			required
-			bind:value={deliveryData.shipping_address.city}
+			bind:value={$checkoutData.shipping.town_city}
+		/>
+
+		<SelectInput
+			name="state"
+			placeholder="Select State"
+			bind:value={$checkoutData.shipping.county_state}
+			size="large"
+			values={transformStatesToInput(STATES)}
 		/>
 		<TextInput
-			name="test"
-			placeholder="State"
+			name="zip_code"
+			placeholder="Zip Code"
 			size="large"
 			required
-			bind:value={deliveryData.shipping_address.state}
+			bind:value={$checkoutData.shipping.postal_zip_code}
 		/>
 	</div>
 
 	<div class="form-group__subgroup">
 		<h5>What's your contact infomration?</h5>
 		<TextInput
-			name="test"
+			name="email"
 			placeholder="Email"
 			type="email"
 			size="large"
 			required
-			bind:value={deliveryData.email}
+			bind:value={$checkoutData.customer.email}
 		/>
 		<TextInput
-			name="test"
+			name="number"
 			placeholder="Phone Number"
 			size="large"
 			type="phone"
 			required
-			bind:value={deliveryData.phone}
+			bind:value={$checkoutData.customer.phone}
 		/>
 		<span class="text-terms"
 			>I have read and consent to eShopWorld processing my information in accordance with the
@@ -89,7 +102,9 @@ import { onMount } from 'svelte';
 		</span>
 	</div>
 
-	<SquareButton width="100%" outlined disabled={!formComplete} size="small" on:click>Continue</SquareButton>
+	<SquareButton width="100%" outlined disabled={!formComplete} size="small" on:click
+		>Continue</SquareButton
+	>
 </form>
 
 <style lang="scss">

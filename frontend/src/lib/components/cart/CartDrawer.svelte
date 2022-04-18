@@ -53,26 +53,20 @@
 	{subtotal}
 	on:click={() => dispatch('cartClosed')}
 >
-	{#if !cartContents}
-		{#each Array($cartCount) as _}
-			<CartItemSkeleton />
-		{/each}
-	{:else}
+	{#if cartContents}
 		{#each cartContents as item}
 			{#if item.permalink}
 				<CartItem
-					price={item.price.raw}
-					thumbnail={item.image?.url}
-					title={item.product_name}
-					id={item.id}
-					permalink={item.permalink}
-					productId={item.product_id}
-					variants={item.selected_options}
+					product={item}
 					bind:quantity={item.quantity}
 					on:quantityUpdated={refreshCartSubtotal}
 					on:handleRemove={() => handleRemove(item.id)}
 				/>
 			{/if}
+		{/each}
+	{:else}
+		{#each Array($cartCount) as _}
+			<CartItemSkeleton />
 		{/each}
 	{/if}
 </ProductDrawer>

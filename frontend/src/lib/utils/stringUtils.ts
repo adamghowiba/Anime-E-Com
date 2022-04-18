@@ -22,3 +22,10 @@ export function getAddressFormatted(address: Address) {
 			  ${address.state}, 
 			  ${address.zip}`;
 }
+
+export function transformStatesToInput(states: { [state: string]: string }) {
+	return Object.entries(states).reduce(
+		(acc, [value, key]) => (acc = [...acc, { value, text: key }]),
+		[]
+	);
+}
